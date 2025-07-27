@@ -1,4 +1,3 @@
-# 全局配置
 global-ua: clash.meta
 mixed-port: 7890
 ipv6: true
@@ -66,7 +65,7 @@ sniffer:
 # 代理模式
 tun:
   enable: true
-  stack: gvisor
+  stack: mixed
   device: auto
   endpoint-independent-nat: true
   auto-route: true
@@ -91,6 +90,7 @@ dns:
   fake-ip-filter:
     - "+.lan"
     - "+.local"
+    - "geosite:private"
     - "geosite:cn"
     - "rule-set:fakeip_filter_domain"
     - "rule-set:game_cn_domain"
@@ -217,8 +217,6 @@ proxy-groups:
   - {name: 美国手动, type: select, include-all: true, hidden: true, filter: "(?i)(美|🇺🇲|US|America|United States)"}
   - {name: 欧洲手动, type: select, include-all: true, hidden: true, filter: "(?i)(🇦🇱|🇦🇩|🇦🇹|🇧🇾|🇧🇪|🇧🇦|🇧🇬|🇭🇷|🇨🇾|🇨🇿|🇩🇰|🇪🇪|🇫🇮|🇫🇷|🇩🇪|🇬🇷|🇭🇺|🇮🇸|🇮🇪|🇮🇹|🇽🇰|🇱🇻|🇱🇮|🇱🇹|🇱🇺|🇲🇹|🇲🇩|🇲🇨|🇲🇪|🇳🇱|🇲🇰|🇳🇴|🇵🇱|🇵🇹|🇷🇴|🇷🇺|🇸🇲|🇷🇸|🇸🇰|🇸🇮|🇪🇸|🇸🇪|🇨🇭|🇹🇷|🇺🇦|🇬🇧|🇻🇦)"}
   - {name: 自建手动, type: select, include-all: true, hidden: true, filter: "(?i)(自建|家宽|cloudflare|The_house|private|home)"}
-
-  # --- 您的自定义分流策略组 ---
   - {name: YouTube, type: select, proxies: [代理, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, "🟢 直连"], icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/youtube.png"}
   - {name: NETFLIX, type: select, proxies: [代理, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, "🟢 直连"], icon: "https://cdn.yyds9527.nyc.mn/https://raw.githubusercontent.com/Lanlan13-14/Icon-for-webui/refs/heads/main/netflix.png"}
   - {name: DisneyPlus, type: select, proxies: [代理, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, "🟢 直连"], icon: "https://cdn.yyds9527.nyc.mn/https://raw.githubusercontent.com/Lanlan13-14/Icon-for-webui/refs/heads/main/disney.png"}
@@ -263,6 +261,10 @@ proxy-groups:
 
 # ### 规则 ###
 rules:
+  - IP-CIDR,127.0.0.0/8,全球直连,no-resolve
+  - IP-CIDR,192.168.0.0/16,全球直连,no-resolve
+  - IP-CIDR,172.16.0.0/12,全球直连,no-resolve
+  - IP-CIDR,10.0.0.0/8,全球直连,no-resolve
   - RULE-SET,banAd_domain,隐私拦截
   - RULE-SET,wechat_domain,全球直连
   - RULE-SET,wechat_asn,全球直连,no-resolve
