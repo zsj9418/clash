@@ -1,3 +1,4 @@
+# 全局配置
 global-ua: clash.meta
 mixed-port: 7890
 ipv6: true
@@ -179,23 +180,32 @@ proxy-groups:
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/automation.png"
   - name: 故障转移
     type: fallback
-    include-all: true
-    lazy: true
+    proxies: [香港-故移, 新加坡-故移, 日本-故移, 台湾-故移, 美国-故移, 欧洲-故移, 自建-故移, 自动选择]
     interval: 300
-    filter: "^((?!(直连|拒绝)).)*$"
+    health-check: {enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60}
+    lazy: false
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/fallback.png"
     
   # --- 区域策略组 (父级) ---
-  - {name: 香港节点, type: select, proxies: [香港自动, 香港均衡, 香港手动], include-all: true, filter: "(?i)(港|hk|hongkong|Hong Kong)", icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/Hongkong.png"}
-  - {name: 新加坡节点, type: select, proxies: [新加坡自动, 新加坡均衡, 新加坡手动], include-all: true, filter: "(?i)(新|🇸🇬|SG|singapore)", icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/Singapore.png"}
-  - {name: 日本节点, type: select, proxies: [日本自动, 日本均衡, 日本手动], include-all: true, filter: "(?i)(日本|🇯🇵|JP|Japan)", icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/Japan.png"}
-  - {name: 台湾节点, type: select, proxies: [台湾自动, 台湾均衡, 台湾手动], include-all: true, filter: "(?i)(台|🇹🇼|TW|Taiwan)", icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/Taiwan_China.png"}
-  - {name: 美国节点, type: select, proxies: [美国自动, 美国均衡, 美国手动], include-all: true, filter: "(?i)(美|🇺🇲|US|America|United States)", icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/America.png"}
-  - {name: 欧洲节点, type: select, proxies: [欧洲自动, 欧洲均衡, 欧洲手动], include-all: true, filter: "(?i)(🇦🇱|🇦🇩|🇦🇹|🇧🇾|🇧🇪|🇧🇦|🇧🇬|🇭🇷|🇨🇾|🇨🇿|🇩🇰|🇪🇪|🇫🇮|🇫🇷|🇩🇪|🇬🇷|🇭🇺|🇮🇸|🇮🇪|🇮🇹|🇽🇰|🇱🇻|🇱🇮|🇱🇹|🇱🇺|🇲🇹|🇲🇩|🇲🇨|🇲🇪|🇳🇱|🇲🇰|🇳🇴|🇵🇱|🇵🇹|🇷🇴|🇷🇺|🇸🇲|🇷🇸|🇸🇰|🇸🇮|🇪🇸|🇸🇪|🇨🇭|🇹🇷|🇺🇦|🇬🇧|🇻🇦)", icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/European.png"}
-  - {name: 自建/家宽节点, type: select, proxies: [自建自动, 自建均衡, 自建手动], include-all: true, filter: "(?i)(自建|家宽|cloudflare|The_house|private|home)", icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/private_node.png"}
+  - {name: 香港节点, type: select, proxies: [香港-故移, 香港自动, 香港均衡, 香港手动], include-all: true, filter: "(?i)(港|hk|hongkong|Hong Kong)", icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/Hongkong.png"}
+  - {name: 新加坡节点, type: select, proxies: [新加坡-故移, 新加坡自动, 新加坡均衡, 新加坡手动], include-all: true, filter: "(?i)(新|🇸🇬|SG|singapore)", icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/Singapore.png"}
+  - {name: 日本节点, type: select, proxies: [日本-故移, 日本自动, 日本均衡, 日本手动], include-all: true, filter: "(?i)(日本|🇯🇵|JP|Japan)", icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/Japan.png"}
+  - {name: 台湾节点, type: select, proxies: [台湾-故移, 台湾自动, 台湾均衡, 台湾手动], include-all: true, filter: "(?i)(台|🇹🇼|TW|Taiwan)", icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/Taiwan_China.png"}
+  - {name: 美国节点, type: select, proxies: [美国-故移, 美国自动, 美国均衡, 美国手动], include-all: true, filter: "(?i)(美|🇺🇲|US|America|United States)", icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/America.png"}
+  - {name: 欧洲节点, type: select, proxies: [欧洲-故移, 欧洲自动, 欧洲均衡, 欧洲手动], include-all: true, filter: "(?i)(🇦🇱|🇦🇩|🇦🇹|🇧🇾|🇧🇪|🇧🇦|🇧🇬|🇭🇷|🇨🇾|🇨🇿|🇩🇰|🇪🇪|🇫🇮|🇫🇷|🇩🇪|🇬🇷|🇭🇺|🇮🇸|🇮🇪|🇮🇹|🇽🇰|🇱🇻|🇱🇮|🇱🇹|🇱🇺|🇲🇹|🇲🇩|🇲🇨|🇲🇪|🇳🇱|🇲🇰|🇳🇴|🇵🇱|🇵🇹|🇷🇴|🇷🇺|🇸🇲|🇷🇸|🇸🇰|🇸🇮|🇪🇸|🇸🇪|🇨🇭|🇹🇷|🇺🇦|🇬🇧|🇻🇦)", icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/European.png"}
+  - {name: 自建/家宽节点, type: select, proxies: [自建-故移, 自建自动, 自建均衡, 自建手动], include-all: true, filter: "(?i)(自建|家宽|cloudflare|The_house|private|home)", icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/private_node.png"}
   - {name: 全部节点, type: select, include-all: true, exclude-filter: "(?i)(🟢 直连)", icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/all.png"}
   
-  # --- 区域策略组 (子级 - 通常隐藏) ---
+  # --- 区域策略组 (子级 - 智能故障转移 Fallback, 带自动切回) ---
+  - {name: 香港-故移, type: fallback, proxies: [香港手动, 香港自动], interval: 180, health-check: {enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60}, lazy: false, hidden: true}
+  - {name: 新加坡-故移, type: fallback, proxies: [新加坡手动, 新加坡自动], interval: 180, health-check: {enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60}, lazy: false, hidden: true}
+  - {name: 日本-故移, type: fallback, proxies: [日本手动, 日本自动], interval: 180, health-check: {enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60}, lazy: false, hidden: true}
+  - {name: 台湾-故移, type: fallback, proxies: [台湾手动, 台湾自动], interval: 180, health-check: {enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60}, lazy: false, hidden: true}
+  - {name: 美国-故移, type: fallback, proxies: [美国手动, 美国自动], interval: 180, health-check: {enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60}, lazy: false, hidden: true}
+  - {name: 欧洲-故移, type: fallback, proxies: [欧洲手动, 欧洲自动], interval: 180, health-check: {enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60}, lazy: false, hidden: true}
+  - {name: 自建-故移, type: fallback, proxies: [自建手动, 自建自动], interval: 180, health-check: {enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60}, lazy: false, hidden: true}
+
+  # --- 区域策略组 (子级 - 自动测速 URL-Test, 隐藏) ---
   - {name: 香港自动, type: url-test, include-all: true, interval: 180, hidden: true, filter: "(?i)(港|hk|hongkong|Hong Kong)"}
   - {name: 新加坡自动, type: url-test, include-all: true, interval: 180, hidden: true, filter: "(?i)(新|🇸🇬|SG|singapore)"}
   - {name: 日本自动, type: url-test, include-all: true, interval: 180, hidden: true, filter: "(?i)(日本|🇯🇵|JP|Japan)"}
@@ -203,6 +213,8 @@ proxy-groups:
   - {name: 美国自动, type: url-test, include-all: true, interval: 180, hidden: true, filter: "(?i)(美|🇺🇲|US|America|united States)"}
   - {name: 欧洲自动, type: url-test, include-all: true, interval: 180, hidden: true, filter: "(?i)(🇦🇱|🇦🇩|🇦🇹|🇧🇾|🇧🇪|🇧🇦|🇧🇬|🇭🇷|🇨🇾|🇨🇿|🇩🇰|🇪🇪|🇫🇮|🇫🇷|🇩🇪|🇬🇷|🇭🇺|🇮🇸|🇮🇪|🇮🇹|🇽🇰|🇱🇻|🇱🇮|🇱🇹|🇱🇺|🇲🇹|🇲🇩|🇲🇨|🇲🇪|🇳🇱|🇲🇰|🇳🇴|🇵🇱|🇵🇹|🇷🇴|🇷🇺|🇸🇲|🇷🇸|🇸🇰|🇸🇮|🇪🇸|🇸🇪|🇨🇭|🇹🇷|🇺🇦|🇬🇧|🇻🇦)"}
   - {name: 自建自动, type: url-test, include-all: true, interval: 180, hidden: true, filter: "(?i)(自建|家宽|cloudflare|The_house|private|home)"}
+
+  # --- 区域策略组 (子级 - 负载均衡 Load-Balance, 隐藏) ---
   - {name: 香港均衡, type: load-balance, include-all: true, strategy: consistent-hashing, hidden: true, filter: "(?i)(港|hk|hongkong|Hong Kong)"}
   - {name: 新加坡均衡, type: load-balance, include-all: true, strategy: consistent-hashing, hidden: true, filter: "(?i)(新|🇸🇬|SG|singapore)"}
   - {name: 日本均衡, type: load-balance, include-all: true, strategy: consistent-hashing, hidden: true, filter: "(?i)(日本|🇯🇵|JP|Japan)"}
@@ -210,13 +222,17 @@ proxy-groups:
   - {name: 美国均衡, type: load-balance, include-all: true, strategy: consistent-hashing, hidden: true, filter: "(?i)(美|🇺🇲|US|America|united States)"}
   - {name: 欧洲均衡, type: load-balance, include-all: true, strategy: consistent-hashing, hidden: true, filter: "(?i)(🇦🇱|🇦🇩|🇦🇹|🇧🇾|🇧🇪|🇧🇦|🇧🇬|🇭🇷|🇨🇾|🇨🇿|🇩🇰|🇪🇪|🇫🇮|🇫🇷|🇩🇪|🇬🇷|🇭🇺|🇮🇸|🇮🇪|🇮🇹|🇽🇰|🇱🇻|🇱🇮|🇱🇹|🇱🇺|🇲🇹|🇲🇩|🇲🇨|🇲🇪|🇳🇱|🇲🇰|🇳🇴|🇵🇱|🇵🇹|🇷🇴|🇷🇺|🇸🇲|🇷🇸|🇸🇰|🇸🇮|🇪🇸|🇸🇪|🇨🇭|🇹🇷|🇺🇦|🇬🇧|🇻🇦)"}
   - {name: 自建均衡, type: load-balance, include-all: true, strategy: consistent-hashing, hidden: true, filter: "(?i)(自建|家宽|cloudflare|The_house|private|home)"}
-  - {name: 香港手动, type: select, include-all: true, hidden: true, filter: "(?i)(港|hk|hongkong|Hong Kong)"}
-  - {name: 新加坡手动, type: select, include-all: true, hidden: true, filter: "(?i)(新|🇸🇬|SG|singapore)"}
-  - {name: 日本手动, type: select, include-all: true, hidden: true, filter: "(?i)(日本|🇯🇵|JP|Japan)"}
-  - {name: 台湾手动, type: select, include-all: true, hidden: true, filter: "(?i)(台|🇹🇼|TW|Taiwan)"}
-  - {name: 美国手动, type: select, include-all: true, hidden: true, filter: "(?i)(美|🇺🇲|US|America|United States)"}
-  - {name: 欧洲手动, type: select, include-all: true, hidden: true, filter: "(?i)(🇦🇱|🇦🇩|🇦🇹|🇧🇾|🇧🇪|🇧🇦|🇧🇬|🇭🇷|🇨🇾|🇨🇿|🇩🇰|🇪🇪|🇫🇮|🇫🇷|🇩🇪|🇬🇷|🇭🇺|🇮🇸|🇮🇪|🇮🇹|🇽🇰|🇱🇻|🇱🇮|🇱🇹|🇱🇺|🇲🇹|🇲🇩|🇲🇨|🇲🇪|🇳🇱|🇲🇰|🇳🇴|🇵🇱|🇵🇹|🇷🇴|🇷🇺|🇸🇲|🇷🇸|🇸🇰|🇸🇮|🇪🇸|🇸🇪|🇨🇭|🇹🇷|🇺🇦|🇬🇧|🇻🇦)"}
-  - {name: 自建手动, type: select, include-all: true, hidden: true, filter: "(?i)(自建|家宽|cloudflare|The_house|private|home)"}
+  
+  # --- 区域策略组 (子级 - 手动选择 Select, UI中可见) ---
+  - {name: 香港手动, type: select, include-all: true, filter: "(?i)(港|hk|hongkong|Hong Kong)", icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/Hongkong.png"}
+  - {name: 新加坡手动, type: select, include-all: true, filter: "(?i)(新|🇸🇬|SG|singapore)", icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/Singapore.png"}
+  - {name: 日本手动, type: select, include-all: true, filter: "(?i)(日本|🇯🇵|JP|Japan)", icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/Japan.png"}
+  - {name: 台湾手动, type: select, include-all: true, filter: "(?i)(台|🇹🇼|TW|Taiwan)", icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/Taiwan_China.png"}
+  - {name: 美国手动, type: select, include-all: true, filter: "(?i)(美|🇺🇲|US|America|United States)", icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/America.png"}
+  - {name: 欧洲手动, type: select, include-all: true, filter: "(?i)(🇦🇱|🇦🇩|🇦🇹|🇧🇾|🇧🇪|🇧🇦|🇧🇬|🇭🇷|🇨🇾|🇨🇿|🇩🇰|🇪🇪|🇫🇮|🇫🇷|🇩🇪|🇬🇷|🇭🇺|🇮🇸|🇮🇪|🇮🇹|🇽🇰|🇱🇻|🇱🇮|🇱🇹|🇱🇺|🇲🇹|🇲🇩|🇲🇨|🇲🇪|🇳🇱|🇲🇰|🇳🇴|🇵🇱|🇵🇹|🇷🇴|🇷🇺|🇸🇲|🇷🇸|🇸🇰|🇸🇮|🇪🇸|🇸🇪|🇨🇭|🇹🇷|🇺🇦|🇬🇧|🇻🇦)", icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/European.png"}
+  - {name: 自建手动, type: select, include-all: true, filter: "(?i)(自建|家宽|cloudflare|The_house|private|home)", icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/private_node.png"}
+
+  # --- 您的自定义分流策略组 ---
   - {name: YouTube, type: select, proxies: [代理, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, "🟢 直连"], icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/youtube.png"}
   - {name: NETFLIX, type: select, proxies: [代理, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, "🟢 直连"], icon: "https://cdn.yyds9527.nyc.mn/https://raw.githubusercontent.com/Lanlan13-14/Icon-for-webui/refs/heads/main/netflix.png"}
   - {name: DisneyPlus, type: select, proxies: [代理, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, "🟢 直连"], icon: "https://cdn.yyds9527.nyc.mn/https://raw.githubusercontent.com/Lanlan13-14/Icon-for-webui/refs/heads/main/disney.png"}
@@ -261,10 +277,13 @@ proxy-groups:
 
 # ### 规则 ###
 rules:
+  # --- 局域网和本机直连规则 (最高优先级) ---
   - IP-CIDR,127.0.0.0/8,全球直连,no-resolve
   - IP-CIDR,192.168.0.0/16,全球直连,no-resolve
   - IP-CIDR,172.16.0.0/12,全球直连,no-resolve
   - IP-CIDR,10.0.0.0/8,全球直连,no-resolve
+  
+  # --- 您原来的规则从这里开始 ---
   - RULE-SET,banAd_domain,隐私拦截
   - RULE-SET,wechat_domain,全球直连
   - RULE-SET,wechat_asn,全球直连,no-resolve
