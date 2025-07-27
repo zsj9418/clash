@@ -148,7 +148,7 @@ proxy-providers:
     proxy: "🟢 直连"
     url: "订阅地址2"
     path: ./providers/订阅组节2.yaml
-    override: {additional-prefix: '[🛫网络合集]', skip-cert-verify: true, udp: true}
+    override: {additional-prefix: '[🛫订阅组节2]', skip-cert-verify: true, udp: true}
   订阅组节3:
     type: http
     interval: 86400
@@ -157,7 +157,7 @@ proxy-providers:
     proxy: "🟢 直连"
     url: "订阅地址3"
     path: ./providers/订阅组节3.yaml
-    override: {additional-prefix: '[🛫自建合集]', skip-cert-verify: true, udp: true}
+    override: {additional-prefix: '[🛫订阅组节3]', skip-cert-verify: true, udp: true}
 
 # ### 策略组 ###
 proxy-groups:
