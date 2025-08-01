@@ -114,14 +114,14 @@ dns:
     - "rule-set:private_domain"
     - "rule-set:cn_domain"
   default-nameserver:
-    - 119.29.29.29
-    - 180.184.1.1
+    - https://223.5.5.5/dns-query
+    - https://1.12.12.12/dns-query
   proxy-server-nameserver:
-    - https://doh.pub/dns-query
-    - https://101.34.254.32/ihtw
-  nameserver:
     - https://dns.google/dns-query
     - https://dns.cloudflare.com/dns-query
+  nameserver:
+    - https://doh.pub/dns-query
+    - quic://dns.nextdns.io
   nameserver-policy:
     "rule-set:banAd_domain": rcode://success
 
@@ -175,12 +175,16 @@ proxy-groups:
     type: url-test
     include-all: true
     lazy: true
+    url: https://cp.cloudflare.com/generate_204
+    url-list:
+    - https://www.google.com/generate_204
+    - https://www.youtube.com/generate_204
     interval: 300
     filter: "^((?!(直连|拒绝)).)*$"
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/automation.png"
   - name: 故障转移
     type: fallback
-    proxies: [香港-故移, 新加坡-故移, 日本-故移, 台湾-故移, 美国-故移, 欧洲-故移, 自建-故移, 自动选择]
+    proxies: [自动选择, 香港-故移, 新加坡-故移, 日本-故移, 台湾-故移, 美国-故移, 欧洲-故移, 自建-故移]
     interval: 300
     health-check: {enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60}
     lazy: false
@@ -232,15 +236,18 @@ proxy-groups:
   - {name: 欧洲手动, type: select, include-all: true, filter: "(?i)(🇦🇱|🇦🇩|🇦🇹|🇧🇾|🇧🇪|🇧🇦|🇧🇬|🇭🇷|🇨🇾|🇨🇿|🇩🇰|🇪🇪|🇫🇮|🇫🇷|🇩🇪|🇬🇷|🇭🇺|🇮🇸|🇮🇪|🇮🇹|🇽🇰|🇱🇻|🇱🇮|🇱🇹|🇱🇺|🇲🇹|🇲🇩|🇲🇨|🇲🇪|🇳🇱|🇲🇰|🇳🇴|🇵🇱|🇵🇹|🇷🇴|🇷🇺|🇸🇲|🇷🇸|🇸🇰|🇸🇮|🇪🇸|🇸🇪|🇨🇭|🇹🇷|🇺🇦|🇬🇧|🇻🇦)", icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/European.png"}
   - {name: 自建手动, type: select, include-all: true, filter: "(?i)(自建|家宽|cloudflare|The_house|private|home)", icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/private_node.png"}
 
-  # --- 您的自定义分流策略组 ---
+  # --- 自定义分流策略组 ---
+  - {name: 全球直连, type: select, proxies: ["🟢 直连"], icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/direct.png"}
   - {name: YouTube, type: select, proxies: [代理, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, "🟢 直连"], icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/youtube.png"}
-  - {name: NETFLIX, type: select, proxies: [代理, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, "🟢 直连"], icon: "https://cdn.yyds9527.nyc.mn/https://raw.githubusercontent.com/Lanlan13-14/Icon-for-webui/refs/heads/main/netflix.png"}
-  - {name: DisneyPlus, type: select, proxies: [代理, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, "🟢 直连"], icon: "https://cdn.yyds9527.nyc.mn/https://raw.githubusercontent.com/Lanlan13-14/Icon-for-webui/refs/heads/main/disney.png"}
+  - {name: NETFLIX, type: select, proxies: [代理, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, "🟢 直连"], icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/netflix.png"}
+  - {name: DisneyPlus, type: select, proxies: [代理, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, "🟢 直连"], icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/disney.png"}
   - {name: HBO, type: select, proxies: [代理, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, "🟢 直连"], icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/hbo.png"}
   - {name: Primevideo, type: select, proxies: [代理, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, "🟢 直连"], icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/primevideo.png"}
   - {name: AppleTV, type: select, proxies: [代理, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, "🟢 直连"], icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/appletv.png"}
   - {name: Spotify, type: select, proxies: [代理, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, "🟢 直连"], icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/spotify.png"}
   - {name: TikTok, type: select, proxies: [代理, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, "🟢 直连"], icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/tiktok.png"}
+  - {name: Crunchyroll, type: select, proxies: [代理, 日本节点, 美国节点, "🟢 直连"], icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/crunchyroll.png"}
+  - {name: Popcorn, type: select, proxies: [代理, 美国节点, "🟢 直连"], icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/popcorn.png"}
   - {name: AI, type: select, proxies: [代理, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, "🟢 直连"], icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/ai.png"}
   - {name: Google, type: select, proxies: [代理, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, "🟢 直连"], icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/google.png"}
   - {name: GoogleVPN, type: select, proxies: [代理, 美国节点, 日本节点, 台湾节点, "🟢 直连"], icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/googlevpn.png"}
@@ -268,8 +275,10 @@ proxy-groups:
   - {name: 国内媒体, type: select, proxies: ["🟢 直连"], icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/Chinese_media.png"}
   - {name: Global-TV, type: select, proxies: [代理, 香港节点, 新加坡节点, 日本节点, 美国节点, "🟢 直连"], icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/global_tv.png"}
   - {name: Global-Medial, type: select, proxies: [代理, 香港节点, 新加坡节点, 日本节点, 美国节点, "🟢 直连"], icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/global_media.png"}
-  - {name: 全球直连, type: select, proxies: ["🟢 直连"], icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/direct.png"}
   - {name: 隐私拦截, type: select, proxies: [🚫 拒绝, ⚪ 丢弃, "🟢 直连"], icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/block.png"}
+  - {name: 加密货币, type: select, proxies: [代理, 香港节点, 新加坡节点, 日本节点, 美国节点, "🟢 直连"], icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/crypto.png"}
+  - {name: Reddit, type: select, proxies: [代理, 香港节点, 新加坡节点, 美国节点, "🟢 直连"], icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/reddit.png"}
+  - {name: Nvidia, type: select, proxies: [代理, 香港节点, 新加坡节点, 美国节点, "🟢 直连"], icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/nvidia.png"}
   
   # --- 特殊行为策略组 ---
   - {name: 🚫 拒绝, type: select, hidden: true, proxies: [REJECT]}
@@ -283,7 +292,11 @@ rules:
   - IP-CIDR,172.16.0.0/12,全球直连,no-resolve
   - IP-CIDR,10.0.0.0/8,全球直连,no-resolve
   
-  # --- 您原来的规则从这里开始 ---
+  # --- 测试和拦截规则（新增） ---
+  - RULE-SET,Test_domain,Speedtest
+  - RULE-SET,Block_domain,隐私拦截
+  
+  # --- 原有规则 ---
   - RULE-SET,banAd_domain,隐私拦截
   - RULE-SET,wechat_domain,全球直连
   - RULE-SET,wechat_asn,全球直连,no-resolve
@@ -292,9 +305,25 @@ rules:
   - RULE-SET,Wise_domain,Wise
   - RULE-SET,paypal_domain,PayPal
   - RULE-SET,proxy_domain,代理
+  
+  # --- AI 规则（细分） ---
+  - RULE-SET,Claude_domain,AI
+  - RULE-SET,Copilot_domain,AI
+  - RULE-SET,Gemini_domain,AI
+  - RULE-SET,Groq_domain,AI
+  - RULE-SET,Grok_domain,AI
+  - RULE-SET,MetaAI_domain,AI
+  - RULE-SET,Perplexity_domain,AI
   - RULE-SET,ai!cn_domain,AI
   - RULE-SET,ai_domain,AI
   - RULE-SET,openai_domain,AI
+  
+  # --- 加密货币规则（新增） ---
+  - RULE-SET,OKX_domain,加密货币
+  - RULE-SET,Bybit_domain,加密货币
+  - RULE-SET,Binance_domain,加密货币
+  
+  # --- 媒体规则 ---
   - RULE-SET,biliintl_domain,哔哩东南亚
   - RULE-SET,bilibili_domain,哔哩哔哩
   - RULE-SET,bilibili_ip,哔哩哔哩,no-resolve
@@ -344,6 +373,8 @@ rules:
   - RULE-SET,disney_domain,DisneyPlus
   - RULE-SET,hbo_domain,HBO
   - RULE-SET,primevideo_domain,Primevideo
+  - RULE-SET,Crunchyroll_domain,Crunchyroll
+  - RULE-SET,Popcorn_domain,Popcorn
   - RULE-SET,emby_domain,Emby
   - RULE-SET,emby_ip,Emby,no-resolve
   - RULE-SET,spotify_domain,Spotify
@@ -353,11 +384,9 @@ rules:
   - RULE-SET,threads_domain,Meta
   - RULE-SET,meta_domain,Meta
   - RULE-SET,facebook_ip,Meta,no-resolve
-  - RULE-SET,twitch_domain,Global-TV
-  - RULE-SET,porn_domain,Global-TV
-  - RULE-SET,TVB_domain,Global-TV
-  - RULE-SET,media!cn_domain,Global-Medial
   - RULE-SET,twitter_ip,代理,no-resolve
+  - RULE-SET,Reddit_domain,Reddit
+  - RULE-SET,Nvidia_domain,Nvidia
   - RULE-SET,steam_domain,STEAM
   - RULE-SET,Epic_domain,游戏平台
   - RULE-SET,EA_domain,游戏平台
@@ -474,3 +503,21 @@ rule-providers:
   google_asn_cn: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://raw.gitmirror.com/Lanlan13-14/Rules/main/rules/IP/AS24424.mrs" }
   discord_asn: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://raw.gitmirror.com/Lanlan13-14/Rules/main/rules/IP/AS49544.mrs" }
   wechat_asn: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://raw.gitmirror.com/Lanlan13-14/Rules/main/rules/IP/AS132203.mrs" }
+  
+  # --- 新增规则提供者 ---
+  Test_domain: { type: http, interval: 86400, behavior: domain, format: text, url: "https://raw.gitmirror.com/liandu2024/clash/main/list/Check.list" }
+  Block_domain: { type: http, interval: 86400, behavior: domain, format: text, url: "https://raw.gitmirror.com/liandu2024/clash/main/list/Block.list" }
+  Claude_domain: { type: http, interval: 86400, behavior: domain, format: text, url: "https://raw.gitmirror.com/blackmatrix7/ios_rule_script/master/rule/Clash/Claude/Claude.list" }
+  Copilot_domain: { type: http, interval: 86400, behavior: domain, format: text, url: "https://raw.gitmirror.com/liandu2024/clash/main/list/Copilot.list" }
+  Gemini_domain: { type: http, interval: 86400, behavior: domain, format: text, url: "https://raw.gitmirror.com/liandu2024/clash/main/list/Gemini.list" }
+  Groq_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.gitmirror.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/groq.mrs" }
+  Grok_domain: { type: http, interval: 86400, behavior: domain, format: text, url: "https://raw.gitmirror.com/liandu2024/clash/main/list/Grok.list" }
+  MetaAI_domain: { type: http, interval: 86400, behavior: domain, format: text, url: "https://raw.gitmirror.com/liandu2024/clash/main/list/MetaAi.list" }
+  Perplexity_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.gitmirror.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/perplexity.mrs" }
+  OKX_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.gitmirror.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/okx.mrs" }
+  Bybit_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.gitmirror.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/bybit.mrs" }
+  Binance_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.gitmirror.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/binance.mrs" }
+  Crunchyroll_domain: { type: http, interval: 86400, behavior: domain, format: text, url: "https://raw.gitmirror.com/liandu2024/clash/main/list/Crunchyroll.list" }
+  Popcorn_domain: { type: http, interval: 86400, behavior: domain, format: text, url: "https://raw.gitmirror.com/liandu2024/clash/main/list/Popcorn.list" }
+  Reddit_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.gitmirror.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/reddit.mrs" }
+  Nvidia_domain: { type: http, interval: 86400, behavior: domain, format: text, url: "https://raw.gitmirror.com/blackmatrix7/ios_rule_script/master/rule/Clash/Nvidia/Nvidia.list" }
