@@ -1,3 +1,8 @@
+# 使用流程非常清晰：
+在你的主策略组（比如 香港节点）里，选择 香港-故移 这个策略。
+然后，到 香港手动 这个策略组里，选择你心仪的、想要长期使用的具体节点。
+完成这两步后，系统就会按照上述逻辑自动运行了。
+
 # 全局配置
 global-ua: clash.meta
 mixed-port: 7890
@@ -521,3 +526,4 @@ rule-providers:
   Popcorn_domain: { type: http, interval: 86400, behavior: domain, format: text, url: "https://raw.gitmirror.com/liandu2024/clash/main/list/Popcorn.list" }
   Reddit_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.gitmirror.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/reddit.mrs" }
   Nvidia_domain: { type: http, interval: 86400, behavior: domain, format: text, url: "https://raw.gitmirror.com/blackmatrix7/ios_rule_script/master/rule/Clash/Nvidia/Nvidia.list" }
+
