@@ -877,7 +877,7 @@ rules:
   - RULE-SET,cn_ip,🟢 直连,no-resolve
   - RULE-SET,fakeip_filter_domain,🟢 直连
   - RULE-SET,game_cn_domain,🟢 直连
-  - MATCH,稳定优先
+  - MATCH,节点选择
 
 rule-providers:
   banAd_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.gitmirror.com/Lanlan13-14/Rules/main/rules/Domain/banAd.mrs" }
