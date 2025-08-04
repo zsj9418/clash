@@ -787,10 +787,10 @@ rules:
   - RULE-SET,wechat_domain,🟢 直连
   - RULE-SET,wechat_asn,🟢 直连,no-resolve
   - RULE-SET,speedtest_domain,Speedtest
-  - RULE-SET,Cloudflare_domain,稳定优先
+  - RULE-SET,Cloudflare_domain,节点选择
   - RULE-SET,Wise_domain,Wise
   - RULE-SET,paypal_domain,PayPal
-  - RULE-SET,proxy_domain,稳定优先
+  - RULE-SET,proxy_domain,节点选择
   - RULE-SET,ai!cn_domain,AI
   - RULE-SET,ai_domain,AI
   - RULE-SET,openai_domain,AI
@@ -856,7 +856,7 @@ rules:
   - RULE-SET,porn_domain,Global-TV
   - RULE-SET,TVB_domain,Global-TV
   - RULE-SET,media!cn_domain,Global-Medial
-  - RULE-SET,twitter_ip,稳定优先,no-resolve
+  - RULE-SET,twitter_ip,节点选择,no-resolve
   - RULE-SET,steam_domain,STEAM
   - RULE-SET,Epic_domain,游戏平台
   - RULE-SET,EA_domain,游戏平台
@@ -870,8 +870,8 @@ rules:
   - RULE-SET,Shopee_domain,国外电商
   - RULE-SET,Shopify_domain,国外电商
   - RULE-SET,ebay_domain,国外电商
-  - RULE-SET,gfw_domain,稳定优先
-  - RULE-SET,geolocation-!cn,稳定优先
+  - RULE-SET,gfw_domain,节点选择
+  - RULE-SET,geolocation-!cn,节点选择
   - RULE-SET,cn_domain,🟢 直连
   - RULE-SET,private_ip,🟢 直连,no-resolve
   - RULE-SET,cn_ip,🟢 直连,no-resolve
