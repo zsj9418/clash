@@ -1,4 +1,6 @@
-# 使用流程：在你的主策略组（比如 香港节点）里，选择 香港-故移 这个策略。然后，到 香港手动 这个策略组里，选择你心仪的、想要长期使用的具体节点。完成这两步后，系统就会在手动节点故障时自动转移,并且手动节点再次能够使用时自动转回。
+# 使用流程：在你的主策略组（比如 香港节点）里，选择 香港-故移 这个策略。
+# 然后，在 香港手动 这个策略组里，选择你想要长期使用的具体节点。
+# 系统会在手动节点故障时自动转移到自动组节点，并且手动节点恢复时自动切回。
 
 # 全局配置
 global-ua: clash.meta
@@ -127,6 +129,7 @@ dns:
   nameserver-policy:
     "rule-set:banAd_domain": rcode://success
 
+# 静态直连
 proxies:
   - name: "🟢 直连"
     type: direct
@@ -162,36 +165,55 @@ proxy-providers:
     path: ./providers/订阅组节3.yaml
     override: {additional-prefix: '[🛫订阅组节3]', skip-cert-verify: true, udp: true}
 
-# ### 策略组 ###
+# ============================================================
+# 策略组（核心修复：引入“手动可检测组”替代“手动”放在 fallback）
+# ============================================================
+
 proxy-groups:
-  # --- 顶层选择 ---
+  # 顶层选择
   - name: 代理
     type: select
     proxies: [自动选择, 故障转移, 手动选择, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, 欧洲节点, 自建/家宽节点, "🟢 直连"]
-    icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/global.png"
+
   - name: 手动选择
     type: select
     proxies: [香港手动, 新加坡手动, 日本手动, 台湾手动, 美国手动, 欧洲手动, 自建手动, 全部节点]
-    icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/select.png"
+
   - name: 自动选择
     type: url-test
     include-all: true
     lazy: true
     url: https://cp.cloudflare.com/generate_204
-    url-list:
-    - https://www.google.com/generate_204
-    - https://www.youtube.com/generate_204
+    url-list: [https://www.google.com/generate_204, https://www.youtube.com/generate_204]
     interval: 300
     filter: "^((?!(直连|拒绝)).)*$"
-    icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/automation.png"
+
   - name: 故障转移
     type: fallback
     proxies: [自动选择, 香港-故移, 新加坡-故移, 日本-故移, 台湾-故移, 美国-故移, 欧洲-故移, 自建-故移]
     interval: 300
     health-check: {enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60}
-    lazy: false
-    icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/fallback.png"
-    
+
+  # =====================================
+  # 新增：手动可检测组（用 url-test 替换手动，用于 fallback 监控）
+  # =====================================
+  - {name: 香港手动可检测, type: url-test, include-all: true, interval: 60, tolerance: 50, lazy: true, hidden: true, filter: "(?i)(港|hk|hongkong|Hong Kong)"}
+  - {name: 新加坡手动可检测, type: url-test, include-all: true, interval: 60, tolerance: 50, lazy: true, hidden: true, filter: "(?i)(新|🇸🇬|SG|singapore)"}
+  - {name: 日本手动可检测, type: url-test, include-all: true, interval: 60, tolerance: 50, lazy: true, hidden: true, filter: "(?i)(日本|🇯🇵|JP|Japan)"}
+  - {name: 台湾手动可检测, type: url-test, include-all: true, interval: 60, tolerance: 50, lazy: true, hidden: true, filter: "(?i)(台|🇹🇼|TW|Taiwan)"}
+  - {name: 美国手动可检测, type: url-test, include-all: true, interval: 60, tolerance: 50, lazy: true, hidden: true, filter: "(?i)(美|🇺🇲|US|America|United States)"}
+  - {name: 欧洲手动可检测, type: url-test, include-all: true, interval: 60, tolerance: 50, lazy: true, hidden: true, filter: "(?i)(🇦🇱|🇦🇩|🇦🇹|🇧🇾|🇧🇪|🇧🇦|🇧🇬|🇭🇷|🇨🇾|🇨🇿|🇩🇰|🇪🇪|🇫🇮|🇫🇷|🇩🇪|🇬🇷|🇭🇺|🇮🇸|🇮🇪|🇮🇹|🇽🇰|🇱🇻|🇱🇮|🇱🇹|🇱🇺|🇲🇹|🇲🇩|🇲🇨|🇲🇪|🇳🇱|🇲🇰|🇳🇴|🇵🇱|🇵🇹|🇷🇴|🇷🇺|🇸🇲|🇷🇸|🇸🇰|🇸🇮|🇪🇸|🇸🇪|🇨🇭|🇹🇷|🇺🇦|🇬🇧|🇻🇦)"}
+  - {name: 自建手动可检测, type: url-test, include-all: true, interval: 60, tolerance: 50, lazy: true, hidden: true, filter: "(?i)(自建|家宽|cloudflare|The_house|private|home)"}
+
+  # 修复后的故移组 —— 替换手动为手动可检测
+  - {name: 香港-故移, type: fallback, proxies: [香港手动可检测, 香港自动], interval: 180, health-check: {enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60}, hidden: true}
+  - {name: 新加坡-故移, type: fallback, proxies: [新加坡手动可检测, 新加坡自动], interval: 180, health-check: {enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60}, hidden: true}
+  - {name: 日本-故移, type: fallback, proxies: [日本手动可检测, 日本自动], interval: 180, health-check: {enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60}, hidden: true}
+  - {name: 台湾-故移, type: fallback, proxies: [台湾手动可检测, 台湾自动], interval: 180, health-check: {enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60}, hidden: true}
+  - {name: 美国-故移, type: fallback, proxies: [美国手动可检测, 美国自动], interval: 180, health-check: {enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60}, hidden: true}
+  - {name: 欧洲-故移, type: fallback, proxies: [欧洲手动可检测, 欧洲自动], interval: 180, health-check: {enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60}, hidden: true}
+  - {name: 自建-故移, type: fallback, proxies: [自建手动可检测, 自建自动], interval: 180, health-check: {enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60}, hidden: true}
+
   # --- 区域策略组 (父级) ---
   - {name: 香港节点, type: select, proxies: [香港-故移, 香港自动, 香港均衡, 香港手动], include-all: true, filter: "(?i)(港|hk|hongkong|Hong Kong)", icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/Hongkong.png"}
   - {name: 新加坡节点, type: select, proxies: [新加坡-故移, 新加坡自动, 新加坡均衡, 新加坡手动], include-all: true, filter: "(?i)(新|🇸🇬|SG|singapore)", icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/Singapore.png"}
@@ -202,14 +224,6 @@ proxy-groups:
   - {name: 自建/家宽节点, type: select, proxies: [自建-故移, 自建自动, 自建均衡, 自建手动], include-all: true, filter: "(?i)(自建|家宽|cloudflare|The_house|private|home)", icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/private_node.png"}
   - {name: 全部节点, type: select, include-all: true, exclude-filter: "(?i)(🟢 直连)", icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/all.png"}
   
-  # --- 区域策略组 (子级 - 智能故障转移 Fallback, 带自动切回) ---
-  - {name: 香港-故移, type: fallback, proxies: [香港手动, 香港自动], interval: 180, health-check: {enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60}, lazy: false, hidden: true}
-  - {name: 新加坡-故移, type: fallback, proxies: [新加坡手动, 新加坡自动], interval: 180, health-check: {enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60}, lazy: false, hidden: true}
-  - {name: 日本-故移, type: fallback, proxies: [日本手动, 日本自动], interval: 180, health-check: {enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60}, lazy: false, hidden: true}
-  - {name: 台湾-故移, type: fallback, proxies: [台湾手动, 台湾自动], interval: 180, health-check: {enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60}, lazy: false, hidden: true}
-  - {name: 美国-故移, type: fallback, proxies: [美国手动, 美国自动], interval: 180, health-check: {enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60}, lazy: false, hidden: true}
-  - {name: 欧洲-故移, type: fallback, proxies: [欧洲手动, 欧洲自动], interval: 180, health-check: {enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60}, lazy: false, hidden: true}
-  - {name: 自建-故移, type: fallback, proxies: [自建手动, 自建自动], interval: 180, health-check: {enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60}, lazy: false, hidden: true}
 
   # --- 区域策略组 (子级 - 自动测速 URL-Test, 隐藏) ---
   - {name: 香港自动, type: url-test, include-all: true, interval: 180, hidden: true, filter: "(?i)(港|hk|hongkong|Hong Kong)"}
@@ -523,8 +537,3 @@ rule-providers:
   Popcorn_domain: { type: http, interval: 86400, behavior: domain, format: text, url: "https://raw.githubusercontent.com/liandu2024/clash/main/list/Popcorn.list" }
   Reddit_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/reddit.mrs" }
   Nvidia_domain: { type: http, interval: 86400, behavior: domain, format: text, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Nvidia/Nvidia.list" }
-
-
-
-
-
