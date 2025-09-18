@@ -163,6 +163,7 @@ proxy-providers:
       additional-prefix: '[🛫订阅组节点前缀3]'
       skip-cert-verify: true
       udp: true
+
 proxy-groups:
   - name: 节点选择
     type: select
@@ -296,7 +297,7 @@ proxy-groups:
     exclude-filter: "(?i)(🟢 直连)"
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/all.png"
 
-  # 智选组（保持原样）
+  # 智选组
   - name: 香港-智选
     type: smart
     include-all: true
@@ -388,123 +389,138 @@ proxy-groups:
     interval: 180
     filter: "(?i)(自建|cloudflare|The_house|private)"
 
-  # 🔧 修正后的 “手动可检测组”
-  - name: 香港手动可检测
-    type: url-test
-    include-all: true
-    interval: 60
-    tolerance: 50
-    lazy: true
+  # 手动中继组 (用于故障转移)
+  - name: 香港-手动中继
+    type: relay
+    proxies: [香港手动]
     hidden: true
-    filter: "(?i)(港|hk|hongkong|Hong Kong)"
 
-  - name: 新加坡手动可检测
-    type: url-test
-    include-all: true
-    interval: 60
-    tolerance: 50
-    lazy: true
+  - name: 新加坡-手动中继
+    type: relay
+    proxies: [新加坡手动]
     hidden: true
-    filter: "(?i)(新|🇸🇬|SG|Singapore)"
 
-  - name: 日本手动可检测
-    type: url-test
-    include-all: true
-    interval: 60
-    tolerance: 50
-    lazy: true
+  - name: 日本-手动中继
+    type: relay
+    proxies: [日本手动]
     hidden: true
-    filter: "(?i)(日本|🇯🇵|JP|Japan)"
 
-  - name: 台湾手动可检测
-    type: url-test
-    include-all: true
-    interval: 60
-    tolerance: 50
-    lazy: true
+  - name: 台湾-手动中继
+    type: relay
+    proxies: [台湾手动]
     hidden: true
-    filter: "(?i)(台|🇹🇼|TW|Taiwan)"
 
-  - name: 美国手动可检测
-    type: url-test
-    include-all: true
-    interval: 60
-    tolerance: 50
-    lazy: true
+  - name: 美国-手动中继
+    type: relay
+    proxies: [美国手动]
     hidden: true
-    filter: "(?i)(美|🇺🇲|US|America|United States)"
 
-  - name: 欧洲手动可检测
-    type: url-test
-    include-all: true
-    interval: 60
-    tolerance: 50
-    lazy: true
+  - name: 欧洲-手动中继
+    type: relay
+    proxies: [欧洲手动]
     hidden: true
-    filter: "(?i)(🇦🇱|🇦🇩|🇦🇹|🇧🇾|🇧🇪|🇧🇦|🇧🇬|🇭🇷|🇨🇾|🇨🇿|🇩🇰|🇪🇪|🇫🇮|🇫🇷|🇩🇪|🇬🇷|🇭🇺|🇮🇸|🇮🇪|🇮🇹|🇽🇰|🇱🇻|🇱🇮|🇱🇹|🇱🇺|🇲🇹|🇲🇩|🇲🇨|🇲🇪|🇳🇱|🇲🇰|🇳🇴|🇵🇱|🇵🇹|🇷🇴|🇷🇺|🇸🇲|🇷🇸|🇸🇰|🇸🇮|🇪🇸|🇸🇪|🇨🇭|🇹🇷|🇺🇦|🇬🇧|🇻🇦)"
 
-  - name: 自建手动可检测
-    type: url-test
-    include-all: true
-    interval: 60
-    tolerance: 50
-    lazy: true
+  - name: 自建-手动中继
+    type: relay
+    proxies: [自建手动]
     hidden: true
-    filter: "(?i)(自建|cloudflare|The_house|private)"
 
+  # 故障转移组 (修复版)
   - name: 香港-故移
     type: fallback
-    proxies: [香港手动可检测, 香港-智选]
+    proxies: [香港-手动中继, 香港-智选]
     interval: 180
-    health-check: { enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60 }
+    health-check: 
+      enable: true
+      url: 'https://cp.cloudflare.com/generate_204'
+      interval: 30
+      url-list:
+        - https://www.google.com/generate_204
+        - https://www.gstatic.com/generate_204
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/priority.png"
     hidden: true
 
   - name: 新加坡-故移
     type: fallback
-    proxies: [新加坡手动可检测, 新加坡-智选]
+    proxies: [新加坡-手动中继, 新加坡-智选]
     interval: 180
-    health-check: { enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60 }
+    health-check: 
+      enable: true
+      url: 'https://cp.cloudflare.com/generate_204'
+      interval: 30
+      url-list:
+        - https://www.google.com/generate_204
+        - https://www.gstatic.com/generate_204
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/priority.png"
     hidden: true
 
   - name: 日本-故移
     type: fallback
-    proxies: [日本手动可检测, 日本-智选]
+    proxies: [日本-手动中继, 日本-智选]
     interval: 180
-    health-check: { enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60 }
+    health-check: 
+      enable: true
+      url: 'https://cp.cloudflare.com/generate_204'
+      interval: 30
+      url-list:
+        - https://www.google.com/generate_204
+        - https://www.gstatic.com/generate_204
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/priority.png"
     hidden: true
 
   - name: 台湾-故移
     type: fallback
-    proxies: [台湾手动可检测, 台湾-智选]
+    proxies: [台湾-手动中继, 台湾-智选]
     interval: 180
-    health-check: { enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60 }
+    health-check: 
+      enable: true
+      url: 'https://cp.cloudflare.com/generate_204'
+      interval: 30
+      url-list:
+        - https://www.google.com/generate_204
+        - https://www.gstatic.com/generate_204
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/priority.png"
     hidden: true
 
   - name: 美国-故移
     type: fallback
-    proxies: [美国手动可检测, 美国-智选]
+    proxies: [美国-手动中继, 美国-智选]
     interval: 180
-    health-check: { enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60 }
+    health-check: 
+      enable: true
+      url: 'https://cp.cloudflare.com/generate_204'
+      interval: 30
+      url-list:
+        - https://www.google.com/generate_204
+        - https://www.gstatic.com/generate_204
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/priority.png"
     hidden: true
 
   - name: 欧洲-故移
     type: fallback
-    proxies: [欧洲手动可检测, 欧洲-智选]
+    proxies: [欧洲-手动中继, 欧洲-智选]
     interval: 180
-    health-check: { enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60 }
+    health-check: 
+      enable: true
+      url: 'https://cp.cloudflare.com/generate_204'
+      interval: 30
+      url-list:
+        - https://www.google.com/generate_204
+        - https://www.gstatic.com/generate_204
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/priority.png"
     hidden: true
 
   - name: 自建-故移
     type: fallback
-    proxies: [自建手动可检测, 自建-智选]
+    proxies: [自建-手动中继, 自建-智选]
     interval: 180
-    health-check: { enable: true, url: 'https://cp.cloudflare.com/generate_204', interval: 60 }
+    health-check: 
+      enable: true
+      url: 'https://cp.cloudflare.com/generate_204'
+      interval: 30
+      url-list:
+        - https://www.google.com/generate_204
+        - https://www.gstatic.com/generate_204
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/priority.png"
     hidden: true
 
@@ -629,7 +645,7 @@ proxy-groups:
     filter: "(?i)(自建|cloudflare|The_house|private)"
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/load-balance.png"
 
-  # 手动组（用来供人点选）
+  # 手动组 (用来供人点选)
   - name: 香港手动
     type: select
     include-all: true
@@ -681,12 +697,12 @@ proxy-groups:
   - name: NETFLIX
     type: select
     proxies: [节点选择, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, 欧洲节点, 全部节点, 自建/家宽节点, "🟢 直连"]
-    icon: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Icon-for-webui/refs/heads/main/netflix.png"
+    icon: "https://gh.b52m.cn/https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Icon-for-webui/refs/heads/main/netflix.png"
 
   - name: DisneyPlus
     type: select
     proxies: [节点选择, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, 欧洲节点, 全部节点, 自建/家宽节点, "🟢 直连"]
-    icon: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Icon-for-webui/refs/heads/main/disney.png"
+    icon: "https://gh.b52m.cn/https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Icon-for-webui/refs/heads/main/disney.png"
 
   - name: HBO
     type: select
@@ -987,99 +1003,99 @@ rules:
   - MATCH,节点选择
 
 rule-providers:
-  banAd_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/banAd.mrs" }
-  private_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs" }
-  bank_cn_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-bank-cn.mrs" }
-  xiaomi_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/xiaomi.mrs" }
-  biliintl_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/bilibili%40!cn.mrs" }
-  bilibili_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/bilibili.mrs" }
-  bahamut_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/bahamut.mrs" }
-  spotify_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/spotify.mrs" }
-  steam_cn_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/steam%40cn.mrs" }
-  steamcdn_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/Steam-domain.mrs" }
-  steam_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/steam.mrs" }
-  ai!cn_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ai-!cn.mrs" }
-  openai_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/openai.mrs" }
-  youtube_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/youtube.mrs" }
-  google_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/google.mrs" }
-  github_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/github.mrs" }
-  telegram_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/telegram.mrs" }
-  netflix_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/netflix.mrs" }
-  paypal_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/paypal.mrs" }
-  onedrive_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/onedrive.mrs" }
-  microsoft_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/microsoft.mrs" }
-  apple_firmware_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/applefirmware.mrs" }
-  apple_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/apple.mrs" }
-  speedtest_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/ookla-speedtest.mrs" }
-  tiktok_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/tiktok.mrs" }
-  gfw_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/gfw.mrs" }
-  geolocation-!cn: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs" }
-  cn_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs" }
-  media_cn_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-media-cn.mrs" }
-  media!cn_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-social-media-!cn.mrs" }
-  Cloudflare_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cloudflare.mrs" }
-  gitbook_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/gitbook.mrs" }
-  disney_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/disney.mrs" }
-  hbo_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/hbo.mrs" }
-  primevideo_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/primevideo.mrs" }
-  NetEaseMusic_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/NetEaseMusic-domain.mrs" }
-  Amazon_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/amazon.mrs" }
-  Shopee_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/shopee.mrs" }
-  ebay_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/ebay.mrs" }
-  appleTV_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/appletv.mrs" }
-  Epic_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/epicgames.mrs" }
-  EA_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/ea.mrs" }
-  Blizzard_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/blizzard.mrs" }
-  UBI_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/ubi.mrs" }
-  Sony_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/sony.mrs" }
-  Nintendo_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/nintendo.mrs" }
-  facebook_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/facebook.mrs" }
-  whatsapp_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/whatsapp.mrs" }
-  instagram_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/instagram.mrs" }
-  threads_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/threads.mrs" }
-  meta_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/meta.mrs" }
-  Wise_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/wise.mrs" }
-  ifast_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/ifast.mrs" }
-  line_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/line.mrs" }
-  talkatone_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/Talkatone-domain.mrs" }
-  Shopify_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/shopify.mrs" }
-  signal_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/signal.mrs" }
-  wechat_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/WeChat.mrs" }
-  proxy_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/proxy.mrs" }
-  direct_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/direct.mrs" }
-  apple_cn_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/apple%40cn.mrs" }
-  alibaba_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/alibaba.mrs" }
-  ai_cn_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ai-cn.mrs" }
-  discord_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/discord.mrs" }
-  fcm_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/googlefcm.mrs" }
-  emby_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/emby.mrs" }
-  pt_cn_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-pt.mrs" }
-  public-tracker_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-public-tracker.mrs" }
-  115_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/115.mrs" }
-  aliyun_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/aliyun.mrs" }
-  twitch_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/twitch.mrs" }
-  porn_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-porn.mrs" }
-  iptv_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/iptv.mrs" }
-  googlevpn_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/googleVPN.mrs" }
-  ai_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/ai.mrs" }
-  TVB_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/tvb.mrs" }
-  game_cn_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-games%40cn.mrs" }
-  fakeip_filter_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/fakeip-filter.mrs" }
+  banAd_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/banAd.mrs" }
+  private_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs" }
+  bank_cn_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-bank-cn.mrs" }
+  xiaomi_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/xiaomi.mrs" }
+  biliintl_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/bilibili%40!cn.mrs" }
+  bilibili_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/bilibili.mrs" }
+  bahamut_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/bahamut.mrs" }
+  spotify_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/spotify.mrs" }
+  steam_cn_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/steam%40cn.mrs" }
+  steamcdn_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/Steam-domain.mrs" }
+  steam_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/steam.mrs" }
+  ai!cn_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ai-!cn.mrs" }
+  openai_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/openai.mrs" }
+  youtube_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/youtube.mrs" }
+  google_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/google.mrs" }
+  github_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/github.mrs" }
+  telegram_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/telegram.mrs" }
+  netflix_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/netflix.mrs" }
+  paypal_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/paypal.mrs" }
+  onedrive_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/onedrive.mrs" }
+  microsoft_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/microsoft.mrs" }
+  apple_firmware_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/applefirmware.mrs" }
+  apple_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/apple.mrs" }
+  speedtest_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/ookla-speedtest.mrs" }
+  tiktok_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/tiktok.mrs" }
+  gfw_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/gfw.mrs" }
+  geolocation-!cn: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs" }
+  cn_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs" }
+  media_cn_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-media-cn.mrs" }
+  media!cn_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-social-media-!cn.mrs" }
+  Cloudflare_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cloudflare.mrs" }
+  gitbook_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/gitbook.mrs" }
+  disney_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/disney.mrs" }
+  hbo_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/hbo.mrs" }
+  primevideo_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/primevideo.mrs" }
+  NetEaseMusic_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/NetEaseMusic-domain.mrs" }
+  Amazon_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/amazon.mrs" }
+  Shopee_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/shopee.mrs" }
+  ebay_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/ebay.mrs" }
+  appleTV_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/appletv.mrs" }
+  Epic_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/epicgames.mrs" }
+  EA_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/ea.mrs" }
+  Blizzard_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/blizzard.mrs" }
+  UBI_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/ubi.mrs" }
+  Sony_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/sony.mrs" }
+  Nintendo_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/nintendo.mrs" }
+  facebook_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/facebook.mrs" }
+  whatsapp_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/whatsapp.mrs" }
+  instagram_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/instagram.mrs" }
+  threads_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/threads.mrs" }
+  meta_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/meta.mrs" }
+  Wise_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/wise.mrs" }
+  ifast_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/ifast.mrs" }
+  line_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/line.mrs" }
+  talkatone_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/Talkatone-domain.mrs" }
+  Shopify_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/shopify.mrs" }
+  signal_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/signal.mrs" }
+  wechat_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/WeChat.mrs" }
+  proxy_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/proxy.mrs" }
+  direct_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/direct.mrs" }
+  apple_cn_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/apple%40cn.mrs" }
+  alibaba_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/alibaba.mrs" }
+  ai_cn_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ai-cn.mrs" }
+  discord_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/discord.mrs" }
+  fcm_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/googlefcm.mrs" }
+  emby_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/emby.mrs" }
+  pt_cn_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-pt.mrs" }
+  public-tracker_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-public-tracker.mrs" }
+  115_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/115.mrs" }
+  aliyun_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/aliyun.mrs" }
+  twitch_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/twitch.mrs" }
+  porn_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-porn.mrs" }
+  iptv_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/iptv.mrs" }
+  googlevpn_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/googleVPN.mrs" }
+  ai_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/ai.mrs" }
+  TVB_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/tvb.mrs" }
+  game_cn_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-games%40cn.mrs" }
+  fakeip_filter_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/fakeip-filter.mrs" }
 
-  # 🚨 IP类规则
-  bilibili_ip: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/bilibili.mrs" }
-  cn_ip: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs" }
-  google_ip: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs" }
-  telegram_ip: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs" }
-  netflix_ip: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/netflix.mrs" }
-  Amazon_ip: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/amazon-ip.mrs" }
-  facebook_ip: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/facebook.mrs" }
-  twitter_ip: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/twitter.mrs" }
-  private_ip: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.mrs" }
-  talkatone_ip: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/Talkatone-ip.mrs" }
-  steamcdn_ip: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/steamCDN-ip.mrs" }
-  NetEaseMusic_ip: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/NetEaseMusic-ip.mrs" }
-  emby_ip: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/emby-ip.mrs" }
-  google_asn_cn: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/AS24424.mrs" }
-  discord_asn: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/AS49544.mrs" }
-  wechat_asn: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/AS132203.mrs" }
+  # IP类规则
+  bilibili_ip: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/bilibili.mrs" }
+  cn_ip: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs" }
+  google_ip: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs" }
+  telegram_ip: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs" }
+  netflix_ip: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/netflix.mrs" }
+  Amazon_ip: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/amazon-ip.mrs" }
+  facebook_ip: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/facebook.mrs" }
+  twitter_ip: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/twitter.mrs" }
+  private_ip: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.mrs" }
+  talkatone_ip: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/Talkatone-ip.mrs" }
+  steamcdn_ip: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/steamCDN-ip.mrs" }
+  NetEaseMusic_ip: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/NetEaseMusic-ip.mrs" }
+  emby_ip: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/emby-ip.mrs" }
+  google_asn_cn: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/AS24424.mrs" }
+  discord_asn: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/AS49544.mrs" }
+  wechat_asn: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/AS132203.mrs" }
