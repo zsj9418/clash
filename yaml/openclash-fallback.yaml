@@ -14,15 +14,15 @@ geodata-loader: standard
 geo-auto-update: true
 geo-update-interval: 48
 geox-url:
-  geosite: "https://gh.b52m.cn/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
-  mmdb: "https://gh.b52m.cn/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.metadb"
-  geoip: "https://gh.b52m.cn/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.dat"
-  asn: "https://gh.b52m.cn/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb"
+  geosite: "https://un.ax18.ggff.net/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
+  mmdb: "https://un.ax18.ggff.net/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.metadb"
+  geoip: "https://un.ax18.ggff.net/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.dat"
+  asn: "https://un.ax18.ggff.net/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb"
 
 external-controller: 0.0.0.0:9090
 私密: ""
 external-ui: ./ui
-external-ui-url: "https://gh.b52m.cn/https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip"
+external-ui-url: "https://un.ax18.ggff.net/https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip"
 
 find-process-mode: strict
 global-client-fingerprint: chrome
@@ -76,7 +76,7 @@ dns:
   启用: true
   listen: 0.0.0.0:1053
   ipv6: true
-  prefer-h3: false
+  prefer-h3: true
   respect-rules: true
   enhanced-mode: fake-ip
   fake-ip-range: 198.20.0.1/16
@@ -106,17 +106,39 @@ dns:
     - "rule-set:iptv_domain"
     - "rule-set:private_domain"
     - "rule-set:cn_domain"
+
   default-nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+
+  proxy-server-nameserver:
     - https://223.5.5.5/dns-query
     - https://1.12.12.12/dns-query
-  proxy-server-nameserver:
-    - https://dns.google/dns-query
-    - https://dns.cloudflare.com/dns-query
+
   nameserver:
     - https://doh.pub/dns-query
-    - quic://dns.nextdns.io
+    - https://dns.alidns.com/dns-query
+
   nameserver-policy:
     "rule-set:banAd_domain": rcode://success
+    "geosite:cn": [https://doh.pub/dns-query, https://dns.alidns.com/dns-query]
+    "rule-set:cn_domain": [https://doh.pub/dns-query, https://dns.alidns.com/dns-query]
+    "geosite:geolocation-!cn": 
+      - https://dns.google/dns-query
+      - https://cloudflare-dns.com/dns-query 
+    "rule-set:google_domain": 
+      - https://dns.google/dns-query
+    "rule-set:cloudflare_domain":
+      - https://1.1.1.1/dns-query
+    "rule-set:github_domain":
+      - https://dns.google/dns-query
+    "rule-set:twitter_domain":
+      - https://1.1.1.1/dns-query
+    "+.google.com": [https://dns.google/dns-query, https://1.1.1.1/dns-query]
+    "+.youtube.com": [https://dns.google/dns-query]
+    "+.githubusercontent.com": [https://dns.google/dns-query]
+    "+.twitter.com": [https://1.1.1.1/dns-query]
+    "+.x.com": [https://1.1.1.1/dns-query]
 
 proxies:
   - 名字: "🟢 直连"
@@ -126,31 +148,31 @@ proxies:
 proxy-providers:
   订阅一:
     类型: http
-    interval: 86400
+    interval: 21600
     health-check: {启用: true, url: 'https://www.apple.com/library/test/success.html', interval: 180}
     filter: '^(?!.*(拒绝|直连|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author|traffic))'
     proxy: "🟢 直连"
     url: "订阅一链接"
     path: ./providers/订阅一.yaml
-    override: {additional-prefix: '[🛫鱼哥合集]', skip-cert-verify: true, udp: true}
+    override: {additional-prefix: '[🛫订阅一]', skip-cert-verify: true, udp: true}
   订阅二:
     类型: http
-    interval: 86400
+    interval: 21600
     health-check: {启用: true, url: 'https://www.apple.com/library/test/success.html', interval: 180}
     filter: '^(?!.*(拒绝|直连|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author|traffic))'
     proxy: "🟢 直连"
     url: "订阅二链接"
     path: ./providers/订阅二.yaml
-    override: {additional-prefix: '[🛫网络合集]', skip-cert-verify: true, udp: true}
+    override: {additional-prefix: '[🛫订阅二]', skip-cert-verify: true, udp: true}
   订阅三:
     类型: http
-    interval: 86400
+    interval: 21600
     health-check: {启用: true, url: 'https://www.apple.com/library/test/success.html', interval: 180}
     filter: '^(?!.*(拒绝|直连|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author|traffic))'
     proxy: "🟢 直连"
     url: "订阅三链接"
     path: ./providers/订阅三.yaml
-    override: {additional-prefix: '[🛫自建合集]', skip-cert-verify: true, udp: true}
+    override: {additional-prefix: '[🛫订阅三]', skip-cert-verify: true, udp: true}
 
 proxy-groups:
   - 名字: 代理
@@ -245,168 +267,168 @@ proxy-groups:
     hidden: true
     filter: "(?i)(自建|家宽|cloudflare|the_house|private|home)"
 
-  - 名字: 香港-故移
-    类型: fallback
+  - name: 香港-故移
+    type: fallback
     proxies: [香港手动, 香港手动可检测, 香港自动]
     url: https://cp.cloudflare.com/generate_204
     interval: 180
     hidden: true
 
-  - 名字: 新加坡-故移
-    类型: fallback
+  - name: 新加坡-故移
+    type: fallback
     proxies: [新加坡手动, 新加坡手动可检测, 新加坡自动]
     url: https://cp.cloudflare.com/generate_204
     interval: 180
     hidden: true
 
-  - 名字: 日本-故移
-    类型: fallback
+  - name: 日本-故移
+    type: fallback
     proxies: [日本手动, 日本手动可检测, 日本自动]
     url: https://cp.cloudflare.com/generate_204
     interval: 180
     hidden: true
 
-  - 名字: 台湾-故移
-    类型: fallback
+  - name: 台湾-故移
+    type: fallback
     proxies: [台湾手动, 台湾手动可检测, 台湾自动]
     url: https://cp.cloudflare.com/generate_204
     interval: 180
     hidden: true
 
-  - 名字: 美国-故移
-    类型: fallback
+  - name: 美国-故移
+    type: fallback
     proxies: [美国手动, 美国手动可检测, 美国自动]
     url: https://cp.cloudflare.com/generate_204
     interval: 180
     hidden: true
 
-  - 名字: 欧洲-故移
-    类型: fallback
+  - name: 欧洲-故移
+    type: fallback
     proxies: [欧洲手动, 欧洲手动可检测, 欧洲自动]
     url: https://cp.cloudflare.com/generate_204
     interval: 180
     hidden: true
 
-  - 名字: 自建-故移
-    类型: fallback
+  - name: 自建-故移
+    type: fallback
     proxies: [自建手动, 自建手动可检测, 自建自动]
     url: https://cp.cloudflare.com/generate_204
     interval: 180
     hidden: true
 
-  - 名字: 香港节点
-    类型: select
+  - name: 香港节点
+    type: select
     proxies: [香港-故移, 香港自动, 香港均衡, 香港手动]
     include-all: true
     filter: "(?i)(港|hk|hongkong|hong kong)"
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/Hongkong.png"
 
-  - 名字: 新加坡节点
-    类型: select
+  - name: 新加坡节点
+    type: select
     proxies: [新加坡-故移, 新加坡自动, 新加坡均衡, 新加坡手动]
     include-all: true
     filter: "(?i)(新|🇸🇬|sg|singapore)"
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/Singapore.png"
 
-  - 名字: 日本节点
-    类型: select
+  - name: 日本节点
+    type: select
     proxies: [日本-故移, 日本自动, 日本均衡, 日本手动]
     include-all: true
     filter: "(?i)(日本|🇯🇵|jp|japan)"
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/Japan.png"
 
-  - 名字: 台湾节点
-    类型: select
+  - name: 台湾节点
+    type: select
     proxies: [台湾-故移, 台湾自动, 台湾均衡, 台湾手动]
     include-all: true
     filter: "(?i)(台|🇹🇼|tw|taiwan)"
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/Taiwan_China.png"
 
-  - 名字: 美国节点
-    类型: select
+  - name: 美国节点
+    type: select
     proxies: [美国-故移, 美国自动, 美国均衡, 美国手动]
     include-all: true
     filter: "(?i)(美|🇺🇲|us|america|united states)"
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/America.png"
 
-  - 名字: 欧洲节点
-    类型: select
+  - name: 欧洲节点
+    type: select
     proxies: [欧洲-故移, 欧洲自动, 欧洲均衡, 欧洲手动]
     include-all: true
     filter: "(?i)(🇦🇱|🇦🇩|🇦🇹|🇧🇾|🇧🇪|🇧🇦|🇧🇬|🇭🇷|🇨🇾|🇨🇿|🇩🇰|🇪🇪|🇫🇮|🇫🇷|🇩🇪|🇬🇷|🇭🇺|🇮🇸|🇮🇪|🇮🇹|🇽🇰|🇱🇻|🇱🇮|🇱🇹|🇱🇺|🇲🇹|🇲🇩|🇲🇨|🇲🇪|🇳🇱|🇲🇰|🇳🇴|🇵🇱|🇵🇹|🇷🇴|🇷🇺|🇸🇲|🇷🇸|🇸🇰|🇸🇮|🇪🇸|🇸🇪|🇨🇭|🇹🇷|🇺🇦|🇬🇧|🇻🇦)"
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/European.png"
 
-  - 名字: 自建/家宽节点
-    类型: select
+  - name: 自建/家宽节点
+    type: select
     proxies: [自建-故移, 自建自动, 自建均衡, 自建手动]
     include-all: true
     filter: "(?i)(自建|家宽|cloudflare|the_house|private|home)"
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/private_node.png"
 
-  - 名字: 全部节点
-    类型: select
+  - name: 全部节点
+    type: select
     include-all: true
     exclude-filter: "(?i)(🟢 直连)"
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/all.png"
 
-  - 名字: 香港自动
-    类型: url-test
+  - name: 香港自动
+    type: url-test
     include-all: true
     url: https://cp.cloudflare.com/generate_204
     interval: 180
     hidden: true
     filter: "(?i)(港|hk|hongkong|hong kong)"
 
-  - 名字: 新加坡自动
-    类型: url-test
+  - name: 新加坡自动
+    type: url-test
     include-all: true
     url: https://cp.cloudflare.com/generate_204
     interval: 180
     hidden: true
     filter: "(?i)(新|🇸🇬|sg|singapore)"
 
-  - 名字: 日本自动
-    类型: url-test
+  - name: 日本自动
+    type: url-test
     include-all: true
     url: https://cp.cloudflare.com/generate_204
     interval: 180
     hidden: true
     filter: "(?i)(日本|🇯🇵|jp|japan)"
 
-  - 名字: 台湾自动
-    类型: url-test
+  - name: 台湾自动
+    type: url-test
     include-all: true
     url: https://cp.cloudflare.com/generate_204
     interval: 180
     hidden: true
     filter: "(?i)(台|🇹🇼|tw|taiwan)"
 
-  - 名字: 美国自动
-    类型: url-test
+  - name: 美国自动
+    type: url-test
     include-all: true
     url: https://cp.cloudflare.com/generate_204
     interval: 180
     hidden: true
     filter: "(?i)(美|🇺🇲|us|america|united states)"
 
-  - 名字: 欧洲自动
-    类型: url-test
+  - name: 欧洲自动
+    type: url-test
     include-all: true
     url: https://cp.cloudflare.com/generate_204
     interval: 180
     hidden: true
     filter: "(?i)(🇦🇱|🇦🇩|🇦🇹|🇧🇾|🇧🇪|🇧🇦|🇧🇬|🇭🇷|🇨🇾|🇨🇿|🇩🇰|🇪🇪|🇫🇮|🇫🇷|🇩🇪|🇬🇷|🇭🇺|🇮🇸|🇮🇪|🇮🇹|🇽🇰|🇱🇻|🇱🇮|🇱🇹|🇱🇺|🇲🇹|🇲🇩|🇲🇨|🇲🇪|🇳🇱|🇲🇰|🇳🇴|🇵🇱|🇵🇹|🇷🇴|🇷🇺|🇸🇲|🇷🇸|🇸🇰|🇸🇮|🇪🇸|🇸🇪|🇨🇭|🇹🇷|🇺🇦|🇬🇧|🇻🇦)"
 
-  - 名字: 自建自动
-    类型: url-test
+  - name: 自建自动
+    type: url-test
     include-all: true
     url: https://cp.cloudflare.com/generate_204
     interval: 180
     hidden: true
     filter: "(?i)(自建|家宽|cloudflare|the_house|private|home)"
 
-  - 名字: 香港均衡
-    类型: load-balance
+  - name: 香港均衡
+    type: load-balance
     include-all: true
     url: https://cp.cloudflare.com/generate_204
     interval: 180
@@ -414,8 +436,8 @@ proxy-groups:
     hidden: true
     filter: "(?i)(港|hk|hongkong|hong kong)"
 
-  - 名字: 新加坡均衡
-    类型: load-balance
+  - name: 新加坡均衡
+    type: load-balance
     include-all: true
     url: https://cp.cloudflare.com/generate_204
     interval: 180
@@ -423,8 +445,8 @@ proxy-groups:
     hidden: true
     filter: "(?i)(新|🇸🇬|sg|singapore)"
 
-  - 名字: 日本均衡
-    类型: load-balance
+  - name: 日本均衡
+    type: load-balance
     include-all: true
     url: https://cp.cloudflare.com/generate_204
     interval: 180
@@ -432,8 +454,8 @@ proxy-groups:
     hidden: true
     filter: "(?i)(日本|🇯🇵|jp|japan)"
 
-  - 名字: 台湾均衡
-    类型: load-balance
+  - name: 台湾均衡
+    type: load-balance
     include-all: true
     url: https://cp.cloudflare.com/generate_204
     interval: 180
@@ -441,8 +463,8 @@ proxy-groups:
     hidden: true
     filter: "(?i)(台|🇹🇼|tw|taiwan)"
 
-  - 名字: 美国均衡
-    类型: load-balance
+  - name: 美国均衡
+    type: load-balance
     include-all: true
     url: https://cp.cloudflare.com/generate_204
     interval: 180
@@ -450,8 +472,8 @@ proxy-groups:
     hidden: true
     filter: "(?i)(美|🇺🇲|us|america|united states)"
 
-  - 名字: 欧洲均衡
-    类型: load-balance
+  - name: 欧洲均衡
+    type: load-balance
     include-all: true
     url: https://cp.cloudflare.com/generate_204
     interval: 180
@@ -459,8 +481,8 @@ proxy-groups:
     hidden: true
     filter: "(?i)(🇦🇱|🇦🇩|🇦🇹|🇧🇾|🇧🇪|🇧🇦|🇧🇬|🇭🇷|🇨🇾|🇨🇿|🇩🇰|🇪🇪|🇫🇮|🇫🇷|🇩🇪|🇬🇷|🇭🇺|🇮🇸|🇮🇪|🇮🇹|🇽🇰|🇱🇻|🇱🇮|🇱🇹|🇱🇺|🇲🇹|🇲🇩|🇲🇨|🇲🇪|🇳🇱|🇲🇰|🇳🇴|🇵🇱|🇵🇹|🇷🇴|🇷🇺|🇸🇲|🇷🇸|🇸🇰|🇸🇮|🇪🇸|🇸🇪|🇨🇭|🇹🇷|🇺🇦|🇬🇧|🇻🇦)"
 
-  - 名字: 自建均衡
-    类型: load-balance
+  - name: 自建均衡
+    type: load-balance
     include-all: true
     url: https://cp.cloudflare.com/generate_204
     interval: 180
@@ -468,230 +490,235 @@ proxy-groups:
     hidden: true
     filter: "(?i)(自建|家宽|cloudflare|the_house|private|home)"
 
-  - 名字: 香港手动
-    类型: select
+  - name: 香港手动
+    type: select
     include-all: true
     filter: "(?i)(港|hk|hongkong|hong kong)"
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/Hongkong.png"
 
-  - 名字: 新加坡手动
-    类型: select
+  - name: 新加坡手动
+    type: select
     include-all: true
     filter: "(?i)(新|🇸🇬|sg|singapore)"
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/Singapore.png"
 
-  - 名字: 日本手动
-    类型: select
+  - name: 日本手动
+    type: select
     include-all: true
     filter: "(?i)(日本|🇯🇵|jp|japan)"
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/Japan.png"
 
-  - 名字: 台湾手动
-    类型: select
+  - name: 台湾手动
+    type: select
     include-all: true
     filter: "(?i)(台|🇹🇼|tw|taiwan)"
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/Taiwan_China.png"
 
-  - 名字: 美国手动
-    类型: select
+  - name: 美国手动
+    type: select
     include-all: true
     filter: "(?i)(美|🇺🇲|us|america|united states)"
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/America.png"
 
-  - 名字: 欧洲手动
-    类型: select
+  - name: 欧洲手动
+    type: select
     include-all: true
     filter: "(?i)(🇦🇱|🇦🇩|🇦🇹|🇧🇾|🇧🇪|🇧🇦|🇧🇬|🇭🇷|🇨🇾|🇨🇿|🇩🇰|🇪🇪|🇫🇮|🇫🇷|🇩🇪|🇬🇷|🇭🇺|🇮🇸|🇮🇪|🇮🇹|🇽🇰|🇱🇻|🇱🇮|🇱🇹|🇱🇺|🇲🇹|🇲🇩|🇲🇨|🇲🇪|🇳🇱|🇲🇰|🇳🇴|🇵🇱|🇵🇹|🇷🇴|🇷🇺|🇸🇲|🇷🇸|🇸🇰|🇸🇮|🇪🇸|🇸🇪|🇨🇭|🇹🇷|🇺🇦|🇬🇧|🇻🇦)"
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/European.png"
 
-  - 名字: 自建手动
-    类型: select
+  - name: 自建手动
+    type: select
     include-all: true
     filter: "(?i)(自建|家宽|cloudflare|the_house|private|home)"
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/private_node.png"
 
-  - 名字: 全球直连
-    类型: select
+  - name: 全球直连
+    type: select
     proxies: ["🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/direct.png"
 
-  - 名字: YouTube
-    类型: select
+  - name: YouTube
+    type: select
     proxies: [代理, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/youtube.png"
 
-  - 名字: NETFLIX
-    类型: select
+  - name: NETFLIX
+    type: select
     proxies: [代理, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/netflix.png"
 
-  - 名字: DisneyPlus
-    类型: select
+  - name: DisneyPlus
+    type: select
     proxies: [代理, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/disney.png"
 
-  - 名字: HBO
-    类型: select
+  - name: HBO
+    type: select
     proxies: [代理, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/hbo.png"
 
-  - 名字: Primevideo
-    类型: select
+  - name: Primevideo
+    type: select
     proxies: [代理, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/primevideo.png"
 
-  - 名字: AppleTV
-    类型: select
+  - name: AppleTV
+    type: select
     proxies: [代理, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/appletv.png"
 
-  - 名字: Spotify
-    类型: select
+  - name: Spotify
+    type: select
     proxies: [代理, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/spotify.png"
 
-  - 名字: TikTok
-    类型: select
+  - name: TikTok
+    type: select
     proxies: [代理, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/tiktok.png"
 
-  - 名字: Crunchyroll
-    类型: select
+  - name: Crunchyroll
+    type: select
     proxies: [代理, 日本节点, 美国节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/crunchyroll.png"
 
-  - 名字: Popcorn
-    类型: select
+  - name: Popcorn
+    type: select
     proxies: [代理, 美国节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/popcorn.png"
 
-  - 名字: AI
-    类型: select
+  - name: AI
+    type: select
     proxies: [代理, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/ai.png"
 
-  - 名字: Google
-    类型: select
+  - name: Google
+    type: select
     proxies: [代理, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/google.png"
 
-  - 名字: GoogleVPN
-    类型: select
+  - name: GoogleVPN
+    type: select
     proxies: [代理, 美国节点, 日本节点, 台湾节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/googlevpn.png"
 
-  - 名字: FCM
-    类型: select
+  - name: FCM
+    type: select
     proxies: [代理, 美国节点, 香港节点, 新加坡节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/fcm.png"
 
-  - 名字: Meta
-    类型: select
+  - name: Meta
+    type: select
     proxies: [代理, 香港节点, 新加坡节点, 美国节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/meta.png"
+    
+  - name: Twitter
+    type: select
+    proxies: [代理, 香港节点, 新加坡节点, 日本节点, 美国节点, "🟢 直连"]
+    icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/twitter.png"
 
-  - 名字: Telegram
-    类型: select
+  - name: Telegram
+    type: select
     proxies: [代理, 香港节点, 新加坡节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/telegram.png"
 
-  - 名字: Discord
-    类型: select
+  - name: Discord
+    type: select
     proxies: [代理, 香港节点, 新加坡节点, 美国节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/discord.png"
 
-  - 名字: GitHub
-    类型: select
+  - name: GitHub
+    type: select
     proxies: [代理, 香港节点, 新加坡节点, 日本节点, 美国节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/github.png"
 
-  - 名字: Microsoft
-    类型: select
+  - name: Microsoft
+    type: select
     proxies: [代理, 香港节点, 新加坡节点, 美国节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/microsoft.png"
 
-  - 名字: OneDrive
-    类型: select
+  - name: OneDrive
+    type: select
     proxies: [代理, 香港节点, 新加坡节点, 美国节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/onedrive.png"
 
-  - 名字: Talkatone
-    类型: select
+  - name: Talkatone
+    type: select
     proxies: [代理, 美国节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/talkatone.png"
 
-  - 名字: LINE
-    类型: select
+  - name: LINE
+    type: select
     proxies: [代理, 日本节点, 台湾节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/line.png"
 
-  - 名字: Signal
-    类型: select
+  - name: Signal
+    type: select
     proxies: [代理, 美国节点, 新加坡节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/signal.png"
 
-  - 名字: Emby
-    类型: select
+  - name: Emby
+    type: select
     proxies: [代理, 香港节点, 新加坡节点, 日本节点, 美国节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/emby.png"
 
-  - 名字: 游戏平台
-    类型: select
+  - name: 游戏平台
+    type: select
     proxies: [代理, 香港节点, 新加坡节点, 日本节点, 美国节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/game.png"
 
-  - 名字: STEAM
-    类型: select
+  - name: STEAM
+    type: select
     proxies: [代理, 香港节点, 新加坡节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/steam.png"
 
-  - 名字: PayPal
-    类型: select
+  - name: PayPal
+    type: select
     proxies: [代理, 香港节点, 美国节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/paypal.png"
 
-  - 名字: Wise
-    类型: select
+  - name: Wise
+    type: select
     proxies: [代理, 香港节点, 新加坡节点, 美国节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/wise.png"
 
-  - 名字: 国外电商
-    类型: select
+  - name: 国外电商
+    type: select
     proxies: [代理, 香港节点, 美国节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/shopping.png"
 
-  - 名字: Speedtest
-    类型: select
+  - name: Speedtest
+    type: select
     proxies: [代理, 香港节点, 新加坡节点, 日本节点, 美国节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/speedtest.png"
 
-  - 名字: Apple
-    类型: select
+  - name: Apple
+    type: select
     proxies: ["🟢 直连", 代理, 香港节点, 新加坡节点, 美国节点]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/apple.png"
 
-  - 名字: 哔哩哔哩
-    类型: select
+  - name: 哔哩哔哩
+    type: select
     proxies: ["🟢 直连", 代理, 香港节点, 台湾节点]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/bilibili.png"
 
-  - 名字: 哔哩东南亚
-    类型: select
+  - name: 哔哩东南亚
+    type: select
     proxies: [代理, 香港节点, 新加坡节点, 台湾节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/bilibilit.png"
 
-  - 名字: 巴哈姆特
-    类型: select
+  - name: 巴哈姆特
+    type: select
     proxies: [台湾节点, 香港节点]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/bahamut.png"
 
-  - 名字: 国内媒体
-    类型: select
+  - name: 国内媒体
+    type: select
     proxies: ["🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/Chinese_media.png"
 
-  - 名字: Global-TV
-    类型: select
+  - name: Global-TV
+    type: select
     proxies: [代理, 香港节点, 新加坡节点, 日本节点, 美国节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/global_tv.png"
 
@@ -705,28 +732,28 @@ proxy-groups:
     proxies: [🚫 拒绝, ⚪ 丢弃, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/block.png"
 
-  - name: 加密货币
-    type: select
+  - 名字: 加密货币
+    类型: select
     proxies: [代理, 香港节点, 新加坡节点, 日本节点, 美国节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/crypto.png"
 
-  - name: Reddit
-    type: select
+  - 名字: Reddit
+    类型: select
     proxies: [代理, 香港节点, 新加坡节点, 美国节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/reddit.png"
 
-  - name: Nvidia
-    type: select
+  - 名字: Nvidia
+    类型: select
     proxies: [代理, 香港节点, 新加坡节点, 美国节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/nvidia.png"
 
-  - name: 🚫 拒绝
-    type: select
+  - 名字: 🚫 拒绝
+    类型: select
     hidden: true
     proxies: [REJECT]
 
-  - name: ⚪ 丢弃
-    type: select
+  - 名字: ⚪ 丢弃
+    类型: select
     hidden: true
     proxies: [REJECT-DROP]
 
@@ -741,7 +768,7 @@ rules:
   - RULE-SET,wechat_domain,全球直连
   - RULE-SET,wechat_asn,全球直连,no-resolve
   - RULE-SET,speedtest_domain,Speedtest
-  - RULE-SET,Cloudflare_domain,代理
+  - RULE-SET,cloudflare_domain,代理
   - RULE-SET,Wise_domain,Wise
   - RULE-SET,paypal_domain,PayPal
   - RULE-SET,proxy_domain,代理
@@ -818,7 +845,9 @@ rules:
   - RULE-SET,threads_domain,Meta
   - RULE-SET,meta_domain,Meta
   - RULE-SET,facebook_ip,Meta,no-resolve
-  - RULE-SET,twitter_ip,代理,no-resolve
+  - RULE-SET,twitter_domain,Twitter
+  - RULE-SET,x_domain,Twitter
+  - RULE-SET,twitter_ip,Twitter,no-resolve
   - RULE-SET,Reddit_domain,Reddit
   - RULE-SET,Nvidia_domain,Nvidia
   - RULE-SET,steam_domain,STEAM
@@ -843,771 +872,785 @@ rules:
 
 rule-providers:
   banAd_domain:
-    type: http
+    类型: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/banAd.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/banAd.mrs"
 
   private_domain:
-    type: http
+    类型: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs"
 
   bank_cn_domain:
-    type: http
+    类型: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-bank-cn.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-bank-cn.mrs"
 
   xiaomi_domain:
-    type: http
+    类型: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/xiaomi.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/xiaomi.mrs"
 
   biliintl_domain:
-    type: http
+    类型: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/bilibili%40!cn.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/bilibili%40!cn.mrs"
 
   bilibili_domain:
-    type: http
+    类型: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/bilibili.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/bilibili.mrs"
 
   bahamut_domain:
-    type: http
+    类型: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/bahamut.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/bahamut.mrs"
 
   spotify_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/spotify.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/spotify.mrs"
 
   steam_cn_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/steam%40cn.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/steam%40cn.mrs"
 
   steamcdn_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/Steam-domain.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/Steam-domain.mrs"
 
   steam_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/steam.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/steam.mrs"
 
   ai!cn_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ai-!cn.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ai-!cn.mrs"
 
   openai_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/openai.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/openai.mrs"
 
   youtube_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/youtube.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/youtube.mrs"
 
   google_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/google.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/google.mrs"
 
   github_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/github.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/github.mrs"
 
   telegram_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/telegram.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/telegram.mrs"
 
   netflix_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/netflix.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/netflix.mrs"
 
   paypal_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/paypal.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/paypal.mrs"
 
   onedrive_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/onedrive.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/onedrive.mrs"
 
   microsoft_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/microsoft.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/microsoft.mrs"
 
   apple_firmware_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/applefirmware.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/applefirmware.mrs"
 
   apple_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/apple.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/apple.mrs"
 
   speedtest_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/ookla-speedtest.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/ookla-speedtest.mrs"
 
   tiktok_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/tiktok.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/tiktok.mrs"
 
   gfw_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/gfw.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/gfw.mrs"
 
   geolocation-!cn:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs"
 
   cn_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs"
 
   media_cn_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-media-cn.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-media-cn.mrs"
 
   media!cn_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-social-media-!cn.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-social-media-!cn.mrs"
 
-  Cloudflare_domain:
+  cloudflare_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cloudflare.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cloudflare.mrs"
 
   gitbook_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/gitbook.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/gitbook.mrs"
 
   disney_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/disney.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/disney.mrs"
 
   hbo_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/hbo.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/hbo.mrs"
 
   primevideo_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/primevideo.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/primevideo.mrs"
 
   NetEaseMusic_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/NetEaseMusic-domain.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/NetEaseMusic-domain.mrs"
 
   Amazon_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/amazon.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/amazon.mrs"
 
   Shopee_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/shopee.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/shopee.mrs"
 
   ebay_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/ebay.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/ebay.mrs"
 
   appleTV_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/appletv.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/appletv.mrs"
 
   Epic_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/epicgames.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/epicgames.mrs"
 
   EA_domain:
-    类型: http
+    type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/ea.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/ea.mrs"
 
   Blizzard_domain:
-    类型: http
+    type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/blizzard.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/blizzard.mrs"
 
   UBI_domain:
-    类型: http
+    type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/ubi.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/ubi.mrs"
 
   Sony_domain:
-    类型: http
+    type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/sony.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/sony.mrs"
 
   Nintendo_domain:
-    类型: http
+    type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/nintendo.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/nintendo.mrs"
 
   facebook_domain:
-    类型: http
+    type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/facebook.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/facebook.mrs"
 
   whatsapp_domain:
-    类型: http
+    type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/whatsapp.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/whatsapp.mrs"
 
   instagram_domain:
-    类型: http
+    type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/instagram.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/instagram.mrs"
 
   threads_domain:
     类型: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/threads.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/threads.mrs"
 
   meta_domain:
     类型: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/meta.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/meta.mrs"
 
   Wise_domain:
     类型: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/wise.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/wise.mrs"
 
   ifast_domain:
     类型: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/ifast.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/ifast.mrs"
 
   line_domain:
     类型: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/line.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/line.mrs"
 
   talkatone_domain:
-    type: http
+    类型: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/Talkatone-domain.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/Talkatone-domain.mrs"
 
   Shopify_domain:
-    type: http
+    类型: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/shopify.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/shopify.mrs"
 
   signal_domain:
-    type: http
+    类型: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/signal.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/signal.mrs"
 
   wechat_domain:
-    type: http
+    类型: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/WeChat.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/WeChat.mrs"
 
   proxy_domain:
-    type: http
+    类型: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/proxy.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/proxy.mrs"
 
   direct_domain:
-    type: http
+    类型: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/direct.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/direct.mrs"
 
   apple_cn_domain:
-    type: http
+    类型: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/apple%40cn.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/apple%40cn.mrs"
 
   alibaba_domain:
-    type: http
+    类型: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/alibaba.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/alibaba.mrs"
 
   ai_cn_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ai-cn.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ai-cn.mrs"
 
   discord_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/discord.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/discord.mrs"
 
   fcm_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/googlefcm.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/googlefcm.mrs"
 
   emby_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/emby.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/emby.mrs"
 
   pt_cn_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-pt.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-pt.mrs"
 
   public-tracker_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-public-tracker.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-public-tracker.mrs"
 
   115_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/115.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/115.mrs"
 
   aliyun_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/aliyun.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/aliyun.mrs"
 
   twitch_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/twitch.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/twitch.mrs"
 
   porn_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-porn.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-porn.mrs"
 
   iptv_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/iptv.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/iptv.mrs"
 
   googlevpn_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/googleVPN.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/googleVPN.mrs"
 
   ai_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/ai.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/ai.mrs"
 
   TVB_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/tvb.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/tvb.mrs"
 
   game_cn_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-games%40cn.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-games%40cn.mrs"
 
   fakeip_filter_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/fakeip-filter.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/fakeip-filter.mrs"
 
   Test_domain:
     type: http
     interval: 86400
     behavior: domain
     format: text
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/liandu2024/clash/main/list/Check.list"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/liandu2024/clash/main/list/Check.list"
 
   Block_domain:
     type: http
     interval: 86400
     behavior: domain
     format: text
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/liandu2024/clash/main/list/Block.list"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/liandu2024/clash/main/list/Block.list"
 
   Claude_domain:
     type: http
     interval: 86400
     behavior: domain
     format: text
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Claude/Claude.list"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Claude/Claude.list"
 
   Copilot_domain:
     type: http
     interval: 86400
     behavior: domain
     format: text
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/liandu2024/clash/main/list/Copilot.list"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/liandu2024/clash/main/list/Copilot.list"
 
   Gemini_domain:
     type: http
     interval: 86400
     behavior: domain
     format: text
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/liandu2024/clash/main/list/Gemini.list"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/liandu2024/clash/main/list/Gemini.list"
 
   Groq_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/groq.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/groq.mrs"
 
   Grok_domain:
     type: http
     interval: 86400
     behavior: domain
     format: text
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/liandu2024/clash/main/list/Grok.list"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/liandu2024/clash/main/list/Grok.list"
 
   MetaAI_domain:
     type: http
     interval: 86400
     behavior: domain
     format: text
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/liandu2024/clash/main/list/MetaAi.list"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/liandu2024/clash/main/list/MetaAi.list"
 
   Perplexity_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/perplexity.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/perplexity.mrs"
 
   OKX_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/okx.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/okx.mrs"
 
   Bybit_domain:
     type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/bybit.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/bybit.mrs"
 
   Binance_domain:
-    类型: http
+    type: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/binance.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/binance.mrs"
 
   Crunchyroll_domain:
-    类型: http
+    type: http
     interval: 86400
     behavior: domain
     format: text
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/liandu2024/clash/main/list/Crunchyroll.list"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/liandu2024/clash/main/list/Crunchyroll.list"
 
   Popcorn_domain:
-    类型: http
+    type: http
     interval: 86400
     behavior: domain
     format: text
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/liandu2024/clash/main/list/Popcorn.list"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/liandu2024/clash/main/list/Popcorn.list"
 
   Reddit_domain:
     类型: http
     interval: 86400
     behavior: domain
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/reddit.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/reddit.mrs"
 
   Nvidia_domain:
     类型: http
     interval: 86400
     behavior: domain
     format: text
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Nvidia/Nvidia.list"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Nvidia/Nvidia.list"
 
   bilibili_ip:
     类型: http
     interval: 86400
     behavior: ipcidr
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/bilibili.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/bilibili.mrs"
 
   cn_ip:
     类型: http
     interval: 86400
     behavior: ipcidr
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs"
 
   google_ip:
     类型: http
     interval: 86400
     behavior: ipcidr
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs"
 
   telegram_ip:
     类型: http
     interval: 86400
     behavior: ipcidr
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"
 
   netflix_ip:
     类型: http
     interval: 86400
     behavior: ipcidr
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/netflix.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/netflix.mrs"
 
   Amazon_ip:
     类型: http
     interval: 86400
     behavior: ipcidr
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/amazon-ip.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/amazon-ip.mrs"
 
   facebook_ip:
     类型: http
     interval: 86400
     behavior: ipcidr
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/facebook.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/facebook.mrs"
 
   twitter_ip:
     类型: http
     interval: 86400
     behavior: ipcidr
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/twitter.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/twitter.mrs"
 
   private_ip:
     类型: http
     interval: 86400
     behavior: ipcidr
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.mrs"
 
   talkatone_ip:
     类型: http
     interval: 86400
     behavior: ipcidr
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/Talkatone-ip.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/Talkatone-ip.mrs"
 
   steamcdn_ip:
     类型: http
     interval: 86400
     behavior: ipcidr
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/steamCDN-ip.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/steamCDN-ip.mrs"
 
   NetEaseMusic_ip:
     类型: http
     interval: 86400
     behavior: ipcidr
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/NetEaseMusic-ip.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/NetEaseMusic-ip.mrs"
 
   emby_ip:
     类型: http
     interval: 86400
     behavior: ipcidr
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/emby-ip.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/emby-ip.mrs"
 
   google_asn_cn:
     类型: http
     interval: 86400
     behavior: ipcidr
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/AS24424.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/AS24424.mrs"
 
   discord_asn:
     类型: http
     interval: 86400
     behavior: ipcidr
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/AS49544.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/AS49544.mrs"
 
   wechat_asn:
     类型: http
     interval: 86400
     behavior: ipcidr
     format: mrs
-    url: "https://gh.b52m.cn/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/AS132203.mrs"
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/AS132203.mrs"
+    
+  twitter_domain:
+    类型: http
+    interval: 86400
+    behavior: domain
+    format: mrs
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/twitter.mrs"
+    
+  x_domain:
+    类型: http
+    interval: 86400
+    behavior: domain
+    format: mrs
+    url: "https://un.ax18.ggff.net/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/x.mrs"
