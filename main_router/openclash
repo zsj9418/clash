@@ -376,12 +376,13 @@ config authentication
 
 config config_subscribe
 	option enabled '1'
+	option name 'Mihomo-openclash-fallback-pro'
+	option address ''
 	option sub_ua 'clash.meta'
 	option sub_convert '0'
 	list ex_keyword '关注'
 	option de_ex_keyword '过期时间 剩余流量 TG群 官网'
-	option name 'Mihomo-openclash-fallback-pro'
-	option address ''
+
 
 config config_subscribe
 	option enabled '1'
