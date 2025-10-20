@@ -9,7 +9,7 @@ authentication:
 skip-auth-prefixes:
 - 127.0.0.1/8
 - ::1/128
-geodata-mode: false
+geodata-mode: true
 geodata-loader: standard
 geo-auto-update: true
 geo-update-interval: 48
@@ -57,6 +57,15 @@ sniffer:
     - "*.vivox.com"
     - "*.oray.com"
     - "*.sunlogin.net"
+    - "doh.pub"
+    - "dns.alidns.com"
+    - "dns.google"
+    - "cloudflare-dns.com"
+    - "1.1.1.1"
+    - "1.0.0.1"
+    - "223.5.5.5"
+    - "119.29.29.29"
+    - "1.12.12.12"
 
 tun:
   enable: true
@@ -67,7 +76,7 @@ tun:
   auto-detect-interface: true
   auto-redirect: false
   strict-route: true
-  mtu: 1500
+  mtu: 1488
   dns-hijack:
     - "any:53"
     - "tcp://any:53"
@@ -79,7 +88,7 @@ dns:
   prefer-h3: true
   respect-rules: true
   enhanced-mode: fake-ip
-  fake-ip-range: 198.20.0.1/16
+  fake-ip-range: 198.18.0.1/16
   fake-ip-filter-mode: blacklist
   fake-ip-filter:
     - "+.lan"
@@ -91,10 +100,12 @@ dns:
     - "rule-set:bank_cn_domain"
     - "rule-set:wechat_domain"
     - "rule-set:ai_cn_domain"
+    - "rule-set:netease_domain"
     - "rule-set:NetEaseMusic_domain"
     - "rule-set:alibaba_domain"
     - "rule-set:media_cn_domain"
     - "rule-set:xiaomi_domain"
+    - "rule-set:xbox_domain"
     - "rule-set:steam_cn_domain"
     - "rule-set:pt_cn_domain"
     - "rule-set:public-tracker_domain"
@@ -123,6 +134,7 @@ dns:
     "rule-set:banAd_domain": rcode://success
     "geosite:cn": [https://doh.pub/dns-query, https://dns.alidns.com/dns-query]
     "rule-set:cn_domain": [https://doh.pub/dns-query, https://dns.alidns.com/dns-query]
+    "rule-set:netease_domain": [https://dns.alidns.com/dns-query, https://doh.pub/dns-query]
     "geosite:geolocation-!cn": 
       - https://dns.google/dns-query
       - https://cloudflare-dns.com/dns-query 
@@ -146,33 +158,33 @@ proxies:
     udp: true
 
 proxy-providers:
-  订阅一:
+  鱼哥合集:
     type: http
-    interval: 21600
+    interval: 43200
     health-check: {enable: true, url: 'https://www.apple.com/library/test/success.html', interval: 180}
     filter: '^(?!.*(拒绝|直连|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author|traffic))'
     proxy: "🟢 直连"
-    url: "订阅一链接"
-    path: ./providers/订阅一.yaml
-    override: {additional-prefix: '[🛫订阅一]', skip-cert-verify: true, udp: true}
-  订阅二:
+    url: "http"
+    path: ./providers/鱼哥合集.yaml
+    override: {additional-prefix: '[🛫鱼哥合集]', skip-cert-verify: true, udp: true}
+  网络合集:
     type: http
-    interval: 21600
+    interval: 43200
     health-check: {enable: true, url: 'https://www.apple.com/library/test/success.html', interval: 180}
     filter: '^(?!.*(拒绝|直连|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author|traffic))'
     proxy: "🟢 直连"
-    url: "订阅二链接"
-    path: ./providers/订阅二.yaml
-    override: {additional-prefix: '[🛫订阅二]', skip-cert-verify: true, udp: true}
-  订阅三:
+    url: "http"
+    path: ./providers/网络合集.yaml
+    override: {additional-prefix: '[🛫网络合集]', skip-cert-verify: true, udp: true}
+  自建合集:
     type: http
-    interval: 21600
+    interval: 43200
     health-check: {enable: true, url: 'https://www.apple.com/library/test/success.html', interval: 180}
     filter: '^(?!.*(拒绝|直连|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author|traffic))'
     proxy: "🟢 直连"
-    url: "订阅三链接"
-    path: ./providers/订阅三.yaml
-    override: {additional-prefix: '[🛫订阅三]', skip-cert-verify: true, udp: true}
+    url: "http"
+    path: ./providers/自建合集.yaml
+    override: {additional-prefix: '[🛫自建合集]', skip-cert-verify: true, udp: true}
 
 proxy-groups:
   - name: 代理
@@ -762,6 +774,14 @@ rules:
   - IP-CIDR,192.168.0.0/16,全球直连,no-resolve
   - IP-CIDR,172.16.0.0/12,全球直连,no-resolve
   - IP-CIDR,10.0.0.0/8,全球直连,no-resolve
+  - IP-CIDR,59.111.0.0/16,全球直连,no-resolve
+  - IP-CIDR,220.243.0.0/16,全球直连,no-resolve
+  - IP-CIDR,39.105.0.0/16,全球直连,no-resolve
+  - IP-CIDR,103.126.92.0/24,全球直连,no-resolve
+  - IP-CIDR,39.100.0.0/16,全球直连,no-resolve
+  - IP-CIDR,106.42.0.0/16,全球直连,no-resolve
+  - IP-CIDR,183.136.0.0/16,全球直连,no-resolve
+  - IP-CIDR,129.211.0.0/16,全球直连,no-resolve
   - RULE-SET,Test_domain,Speedtest
   - RULE-SET,Block_domain,隐私拦截
   - RULE-SET,banAd_domain,隐私拦截
@@ -819,6 +839,7 @@ rules:
   - RULE-SET,steam_cn_domain,全球直连
   - RULE-SET,steamcdn_domain,全球直连
   - RULE-SET,steamcdn_ip,全球直连,no-resolve
+  - RULE-SET,netease_domain,全球直连
   - RULE-SET,NetEaseMusic_domain,全球直连
   - RULE-SET,NetEaseMusic_ip,全球直连,no-resolve
   - RULE-SET,pt_cn_domain,全球直连
@@ -851,6 +872,7 @@ rules:
   - RULE-SET,Reddit_domain,Reddit
   - RULE-SET,Nvidia_domain,Nvidia
   - RULE-SET,steam_domain,STEAM
+  - RULE-SET,xbox_domain,游戏平台
   - RULE-SET,Epic_domain,游戏平台
   - RULE-SET,EA_domain,游戏平台
   - RULE-SET,Blizzard_domain,游戏平台
@@ -1654,3 +1676,17 @@ rule-providers:
     behavior: domain
     format: mrs
     url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/x.mrs"
+
+  netease_domain:
+    type: http
+    behavior: domain
+    format: text
+    interval: 86400
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/NetEase/NetEase.list"
+
+  xbox_domain:
+    type: http
+    behavior: domain
+    format: text
+    interval: 86400
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Xbox/Xbox.list"
