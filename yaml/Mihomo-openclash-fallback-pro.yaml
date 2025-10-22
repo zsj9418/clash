@@ -721,7 +721,7 @@ proxy-groups:
 
   - name: 巴哈姆特
     type: select
-    proxies: [台湾节点, 香港节点]
+    proxies: [代理, 台湾节点, 香港节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/bahamut.png"
 
   - name: 国内媒体
