@@ -576,7 +576,7 @@ proxy-groups:
     proxies: [代理, 香港节点, 新加坡节点, 台湾节点, "🟢 直连"]
   - name: 巴哈姆特
     type: select
-    proxies: [台湾节点, 香港节点]
+    proxies: [代理, 台湾节点, 香港节点, "🟢 直连"]
   - name: 国内媒体
     type: select
     proxies: ["🟢 直连"]
