@@ -164,7 +164,7 @@ proxy-providers:
     health-check: {enable: true, url: 'https://www.apple.com/library/test/success.html', interval: 180}
     filter: '^(?!.*(拒绝|直连|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author|traffic))'
     proxy: "🟢 直连"
-    url: "http"
+    url: ""
     path: ./providers/鱼哥合集.yaml
     override: {additional-prefix: '[🛫鱼哥合集]', skip-cert-verify: true, udp: true}
   网络合集:
@@ -173,7 +173,7 @@ proxy-providers:
     health-check: {enable: true, url: 'https://www.apple.com/library/test/success.html', interval: 180}
     filter: '^(?!.*(拒绝|直连|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author|traffic))'
     proxy: "🟢 直连"
-    url: "http"
+    url: ""
     path: ./providers/网络合集.yaml
     override: {additional-prefix: '[🛫网络合集]', skip-cert-verify: true, udp: true}
   自建合集:
@@ -182,7 +182,7 @@ proxy-providers:
     health-check: {enable: true, url: 'https://www.apple.com/library/test/success.html', interval: 180}
     filter: '^(?!.*(拒绝|直连|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author|traffic))'
     proxy: "🟢 直连"
-    url: "http"
+    url: ""
     path: ./providers/自建合集.yaml
     override: {additional-prefix: '[🛫自建合集]', skip-cert-verify: true, udp: true}
 
@@ -190,11 +190,11 @@ proxy-groups:
   # 主分组
   - name: 代理
     type: select
-    proxies: [智选, 故障转移, 手动选择, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, 欧洲节点, 自建/家宽节点, 全部节点, "🟢 直连"]
+    proxies: [智选, 故障转移, 手动选择, 香港节点, 新加坡节点, 日本节点, 台湾节点, 美国节点, 欧洲节点, 其他地区节点, 自建/家宽节点, 全部节点, "🟢 直连"]
 
   - name: 手动选择
     type: select
-    proxies: [香港手动, 新加坡手动, 日本手动, 台湾手动, 美国手动, 欧洲手动, 自建手动, 全部节点]
+    proxies: [香港手动, 新加坡手动, 日本手动, 台湾手动, 美国手动, 欧洲手动, 其他地区手动, 自建手动, 全部节点]
 
   - name: 智选
     type: smart
@@ -211,7 +211,7 @@ proxy-groups:
 
   - name: 故障转移
     type: fallback
-    proxies: [智选, 香港-故移, 新加坡-故移, 日本-故移, 台湾-故移, 美国-故移, 欧洲-故移, 自建-故移]
+    proxies: [智选, 香港-故移, 新加坡-故移, 日本-故移, 台湾-故移, 美国-故移, 欧洲-故移, 其他地区-故移, 自建-故移]
     url: https://cp.cloudflare.com/generate_204
     interval: 300
 
@@ -252,6 +252,12 @@ proxy-groups:
     url: https://cp.cloudflare.com/generate_204
     interval: 180
     hidden: true
+  - name: 其他地区-故移
+    type: fallback
+    proxies: [其他地区手动, 其他地区智选, 其他地区均衡]
+    url: https://cp.cloudflare.com/generate_204
+    interval: 180
+    hidden: true
   - name: 自建-故移
     type: fallback
     proxies: [自建手动, 自建智选, 自建均衡]
@@ -262,37 +268,42 @@ proxy-groups:
   # 地区节点分组
   - name: 香港节点
     type: select
-    proxies: [香港-故移, 香港智选, 香港均衡, 香港手动]
+    proxies: [香港-故移, 香港智选, 香港均衡, 香港手动, 智选, 故障转移]
     include-all: true
     filter: "(?i)(港|hk|hongkong|hong kong)"
   - name: 新加坡节点
     type: select
-    proxies: [新加坡-故移, 新加坡智选, 新加坡均衡, 新加坡手动]
+    proxies: [新加坡-故移, 新加坡智选, 新加坡均衡, 新加坡手动, 智选, 故障转移]
     include-all: true
     filter: "(?i)(新|🇸🇬|sg|singapore)"
   - name: 日本节点
     type: select
-    proxies: [日本-故移, 日本智选, 日本均衡, 日本手动]
+    proxies: [日本-故移, 日本智选, 日本均衡, 日本手动, 智选, 故障转移]
     include-all: true
     filter: "(?i)(日本|🇯🇵|jp|japan)"
   - name: 台湾节点
     type: select
-    proxies: [台湾-故移, 台湾智选, 台湾均衡, 台湾手动]
+    proxies: [台湾-故移, 台湾智选, 台湾均衡, 台湾手动, 智选, 故障转移]
     include-all: true
     filter: "(?i)(台|🇹🇼|tw|taiwan)"
   - name: 美国节点
     type: select
-    proxies: [美国-故移, 美国智选, 美国均衡, 美国手动]
+    proxies: [美国-故移, 美国智选, 美国均衡, 美国手动, 智选, 故障转移]
     include-all: true
     filter: "(?i)(美|🇺🇸|us|america|united states)"
   - name: 欧洲节点
     type: select
-    proxies: [欧洲-故移, 欧洲智选, 欧洲均衡, 欧洲手动]
+    proxies: [欧洲-故移, 欧洲智选, 欧洲均衡, 欧洲手动, 智选, 故障转移]
     include-all: true
     filter: "(?i)(欧洲|EU|Europe|英国|UK|France|Germany|🇬🇧|🇫🇷|🇩🇪)"
+  - name: 其他地区节点
+    type: select
+    proxies: [其他地区-故移, 其他地区智选, 其他地区均衡, 其他地区手动, 智选, 故障转移]
+    include-all: true
+    exclude-filter: "(?i)(港|hk|hongkong|Hong Kong|🇭🇰|新|🇸🇬|SG|Singapore|坡|狮城|日本|🇯🇵|JP|Japan|东京|大阪|台|🇹🇼|TW|Taiwan|台灣|美|🇺🇸|US|America|United States|纽约|洛杉矶|欧洲|EU|Europe|英国|UK|France|Germany|🇬🇧|🇫🇷|🇩🇪|自建|家宽|cloudflare|the_house|private|home|直连|拒绝)"
   - name: 自建/家宽节点
     type: select
-    proxies: [自建-故移, 自建智选, 自建均衡, 自建手动]
+    proxies: [自建-故移, 自建智选, 自建均衡, 自建手动, 智选, 故障转移]
     include-all: true
     filter: "(?i)(自建|家宽|cloudflare|the_house|private|home)"
 
@@ -326,6 +337,10 @@ proxy-groups:
     type: select
     include-all: true
     filter: "(?i)(欧洲|EU|Europe|英国|UK|France|Germany|🇬🇧|🇫🇷|🇩🇪)"
+  - name: 其他地区手动
+    type: select
+    include-all: true
+    exclude-filter: "(?i)(港|hk|hongkong|Hong Kong|🇭🇰|新|🇸🇬|SG|Singapore|坡|狮城|日本|🇯🇵|JP|Japan|东京|大阪|台|🇹🇼|TW|Taiwan|台灣|美|🇺🇸|US|America|United States|纽约|洛杉矶|欧洲|EU|Europe|英国|UK|France|Germany|🇬🇧|🇫🇷|🇩🇪|自建|家宽|cloudflare|the_house|private|home|直连|拒绝)"
   - name: 自建手动
     type: select
     include-all: true
@@ -404,6 +419,18 @@ proxy-groups:
     hidden: true
     interval: 180
     filter: "(?i)(欧洲|EU|Europe|英国|UK|France|Germany|🇬🇧|🇫🇷|🇩🇪)"
+  - name: 其他地区智选
+    type: smart
+    include-all: true
+    policy-priority: "(?i).*(VIP).*:2.0"
+    uselightgbm: true
+    collectdata: false
+    health-check: { enable: true, url: https://cp.cloudflare.com/generate_204, interval: 60, tolerance: 2 }
+    auto-sort: true
+    lazy: true
+    hidden: true
+    interval: 180
+    exclude-filter: "(?i)(港|hk|hongkong|Hong Kong|🇭🇰|新|🇸🇬|SG|Singapore|坡|狮城|日本|🇯🇵|JP|Japan|东京|大阪|台|🇹🇼|TW|Taiwan|台灣|美|🇺🇸|US|America|United States|纽约|洛杉矶|欧洲|EU|Europe|英国|UK|France|Germany|🇬🇧|🇫🇷|🇩🇪|自建|家宽|cloudflare|the_house|private|home|直连|拒绝)"
   - name: 自建智选
     type: smart
     include-all: true
@@ -466,6 +493,14 @@ proxy-groups:
     strategy: consistent-hashing
     hidden: true
     filter: "(?i)(欧洲|EU|Europe|英国|UK|France|Germany|🇬🇧|🇫🇷|🇩🇪)"
+  - name: 其他地区均衡
+    type: load-balance
+    include-all: true
+    url: https://cp.cloudflare.com/generate_204
+    interval: 180
+    strategy: consistent-hashing
+    hidden: true
+    exclude-filter: "(?i)(港|hk|hongkong|Hong Kong|🇭🇰|新|🇸🇬|SG|Singapore|坡|狮城|日本|🇯🇵|JP|Japan|东京|大阪|台|🇹🇼|TW|Taiwan|台灣|美|🇺🇸|US|America|United States|纽约|洛杉矶|欧洲|EU|Europe|英国|UK|France|Germany|🇬🇧|🇫🇷|🇩🇪|自建|家宽|cloudflare|the_house|private|home|直连|拒绝)"
   - name: 自建均衡
     type: load-balance
     include-all: true
