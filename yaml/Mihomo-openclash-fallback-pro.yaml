@@ -84,12 +84,10 @@ dns:
   fake-ip-range: 198.18.0.1/16
   fake-ip-filter-mode: blacklist
   fake-ip-filter:
-    # === STUN 防 DNS 污染修正 ===
     - "+.stun.protocol.org"
     - "+.stun.l.google.com"
     - "+.miwifi.com"
     - "+.syncthing.net"
-    # ==========================
     - "+.lan"
     - "+.local"
     - "geosite:private"
@@ -131,6 +129,42 @@ dns:
     - 2409:8060:20ea:200::1
     - https://doh.pub/dns-query
     - https://dns.alidns.com/dns-query
+  fallback:
+    - https://dns.google/dns-query
+    - https://cloudflare-dns.com/dns-query
+    - https://1.1.1.1/dns-query
+    - tls://dns.google:853
+    - tls://1.1.1.1:853
+  fallback-filter:
+    geoip: true
+    geoip-code: CN
+    ipcidr:
+      - 0.0.0.0/8
+      - 10.0.0.0/8
+      - 127.0.0.0/8
+      - 169.254.0.0/16
+      - 172.16.0.0/12
+      - 192.168.0.0/16
+      - 224.0.0.0/4
+      - 240.0.0.0/4
+      - 8.7.198.45/32
+      - 93.46.8.89/32
+      - 37.235.1.174/32
+    domain:
+      - "*.google.com"
+      - "*.youtube.com"
+      - "*.twitter.com"
+      - "*.x.com"
+      - "*.facebook.com"
+      - "*.instagram.com"
+      - "*.telegram.org"
+      - "*.github.com"
+      - "*.netflix.com"
+      - "*.discord.com"
+      - "*.openai.com"
+      - "*.claude.ai"
+      - "*.twitch.tv"
+      - "*.reddit.com"
   nameserver-policy:
     "rule-set:banAd_domain": rcode://success
     "geosite:cn": [https://doh.pub/dns-query, https://dns.alidns.com/dns-query]
@@ -159,29 +193,29 @@ proxies:
 proxy-providers:
   鱼哥合集:
     type: http
-    interval: 43200
+    interval: 86400
     health-check: {enable: true, url: 'https://www.google.com/generate_204', interval: 180}
     filter: '^(?!.*(拒绝|直连|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author|traffic))'
     proxy: "🟢 直连"
-    url: "机场连接"
+    url: "订阅链接"
     path: ./providers/鱼哥合集.yaml
     override: {additional-prefix: '[🛫鱼哥合集]', skip-cert-verify: true, udp: true, client-fingerprint: chrome}
   网络合集:
     type: http
-    interval: 43200
+    interval: 86400
     health-check: {enable: true, url: 'https://www.google.com/generate_204', interval: 180}
     filter: '^(?!.*(拒绝|直连|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author|traffic))'
     proxy: "🟢 直连"
-    url: "机场连接"
+    url: "订阅链接"
     path: ./providers/网络合集.yaml
     override: {additional-prefix: '[🛫网络合集]', skip-cert-verify: true, udp: true, client-fingerprint: chrome}
   自建合集:
     type: http
-    interval: 43200
+    interval: 86400
     health-check: {enable: true, url: 'https://www.google.com/generate_204', interval: 180}
     filter: '^(?!.*(拒绝|直连|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author|traffic))'
     proxy: "🟢 直连"
-    url: "机场连接"
+    url: "订阅链接"
     path: ./providers/自建合集.yaml
     override: {additional-prefix: '[🛫自建合集]', skip-cert-verify: true, udp: true, client-fingerprint: chrome}
 proxy-groups:
@@ -214,6 +248,15 @@ proxy-groups:
      
   - name: 出口-手动
     type: select
+    proxies:
+    - 香港-故移
+    - 新加坡-故移
+    - 日本-故移
+    - 台湾-故移
+    - 美国-故移
+    - 欧洲-故移
+    - 其他地区-故移
+    - 自建-故移
     filter: "(?i)(自建|家宽|VPS|稳定|纯净|住宅|Private|Home)"
     include-all-providers: true
   - name: 出口-自动
@@ -226,7 +269,7 @@ proxy-groups:
     type: url-test
     tolerance: 300
     include-all: true
-    exclude-filter: "^((?!(直连|拒绝)).)*$"
+    exclude-filter: "(?i)(直连|拒绝)"
     hidden: true
   - name: 手动选择
     type: select
@@ -593,7 +636,6 @@ proxy-groups:
     type: select
     proxies: [代理, 香港节点, 新加坡节点, 美国节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/meta.png"
-   
   - name: Twitter
     type: select
     proxies: [代理, 香港节点, 新加坡节点, 日本节点, 美国节点, "🟢 直连"]
@@ -702,6 +744,22 @@ proxy-groups:
     type: select
     proxies: [代理, 香港节点, 新加坡节点, 美国节点, "🟢 直连"]
     icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/nvidia.png"
+  - name: Twitch
+    type: select
+    proxies: [代理, 香港节点, 新加坡节点, 日本节点, 美国节点, "🟢 直连"]
+    icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/twitch.png"
+  - name: TVB
+    type: select
+    proxies: [代理, 香港节点, 台湾节点, "🟢 直连"]
+    icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/tvb.png"
+  - name: 境外社交媒体
+    type: select
+    proxies: [代理, 香港节点, 新加坡节点, 美国节点, "🟢 直连"]
+    icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/global_media.png"
+  - name: 成人内容
+    type: select
+    proxies: [代理, 美国节点, "🟢 直连", 隐私拦截]
+    icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/block.png"
   - name: 🚫 拒绝
     type: select
     hidden: true
@@ -711,14 +769,9 @@ proxy-groups:
     hidden: true
     proxies: [REJECT-DROP]
 rules:
-  # === Lucky STUN 修复规则 (必须放在最前) ===
-  - DST-PORT,3478,全球直连
-  - DST-PORT,19302,全球直连
-  - DST-PORT,4000-8000,全球直连
-  # ======================================
-  # 新增：设备分流规则 (最高优先级，用于链式代理)
-  # 请将 192.168.1.101 替换为您需要走链式代理的设备的真实IP地址
-  # - SRC-IP-CIDR, 192.168.1.101/32, ⛓️ 链式代理
+  - AND,(NETWORK,UDP),(DST-PORT,3478),全球直连
+  - AND,(NETWORK,UDP),(DST-PORT,19302),全球直连
+  - AND,(NETWORK,UDP),(DST-PORT,50000-65535),全球直连
   - IP-CIDR,127.0.0.0/8,全球直连,no-resolve
   - IP-CIDR,192.168.0.0/16,全球直连,no-resolve
   - IP-CIDR,172.16.0.0/12,全球直连,no-resolve
@@ -834,6 +887,10 @@ rules:
   - RULE-SET,Shopee_domain,国外电商
   - RULE-SET,Shopify_domain,国外电商
   - RULE-SET,ebay_domain,国外电商
+  - RULE-SET,TVB_domain,TVB
+  - RULE-SET,twitch_domain,Twitch
+  - RULE-SET,porn_domain,成人内容
+  - RULE-SET,media!cn_domain,境外社交媒体
   - RULE-SET,gfw_domain,代理
   - RULE-SET,geolocation-!cn,代理
   - RULE-SET,cn_domain,全球直连
