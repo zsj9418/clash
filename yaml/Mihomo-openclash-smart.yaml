@@ -41,16 +41,15 @@ tun:
   enable: true
   stack: mixed
   device: tun0
-  endpoint-independent-nat: true
   auto-route: true
   auto-detect-interface: true
-  auto-redirect: true
+  auto-redirect: false
   strict-route: false
   mtu: 1350
   gso: false
   exclude-interface:
-    - docker0
     - lo
+    - docker0
   route-exclude-address:
     - 10.0.0.0/8
     - 172.16.0.0/12
