@@ -74,7 +74,7 @@ config openclash 'config'
 	option servers_if_update '0'
 	option servers_update '0'
 	option auto_update '0'
-	option core_version 'linux-arm64'
+	option core_version ''
 	option release_branch 'master'
 config authentication
 	option enabled '1'
