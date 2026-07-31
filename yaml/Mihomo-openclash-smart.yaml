@@ -29,7 +29,7 @@ geox-url:
   geoip: "https://un.ax18.ggff.net/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.dat"
   asn: "https://un.ax18.ggff.net/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb"
 external-controller: 0.0.0.0:9090
-secret: "zs147258"
+secret: ""
 external-ui: ./ui
 external-ui-url: "https://un.ax18.ggff.net/https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip"
 keep-alive-idle: 600
