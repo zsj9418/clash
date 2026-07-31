@@ -24,19 +24,19 @@ geodata-loader: standard
 geo-auto-update: true
 geo-update-interval: 48
 geox-url:
-  geosite: "https://un.ax18.ggff.net/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
-  mmdb: "https://un.ax18.ggff.net/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.metadb"
-  geoip: "https://un.ax18.ggff.net/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.dat"
-  asn: "https://un.ax18.ggff.net/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb"
+  geosite: "https://gh.xmly.dev/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
+  mmdb: "https://gh.xmly.dev/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.metadb"
+  geoip: "https://gh.xmly.dev/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.dat"
+  asn: "https://gh.xmly.dev/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb"
 external-controller: 0.0.0.0:9090
 secret: ""
 external-ui: ./ui
-external-ui-url: "https://un.ax18.ggff.net/https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip"
+external-ui-url: "https://gh.xmly.dev/https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip"
 keep-alive-idle: 600
 keep-alive-interval: 1800
 lgbm-auto-update: true
 lgbm-update-interval: 72
-lgbm-url: "https://un.ax18.ggff.net/https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model.bin"
+lgbm-url: "https://gh.xmly.dev/https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model.bin"
 profile:
   store-selected: true
   store-fake-ip: true
@@ -918,7 +918,7 @@ rule-providers:
     format: mrs
     proxy: 自动选择(延迟)
     path: ./rule-providers/banAd_domain.mrs
-    url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/banAd.mrs"
+    url: "https://gh.xmly.dev/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/banAd.mrs"
   steamcdn_domain:
     type: http
     interval: 86400
@@ -926,7 +926,7 @@ rule-providers:
     format: mrs
     proxy: 自动选择(延迟)
     path: ./rule-providers/steamcdn_domain.mrs
-    url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/Steam-domain.mrs"
+    url: "https://gh.xmly.dev/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/Steam-domain.mrs"
   google_domain:
     type: http
     interval: 86400
@@ -934,7 +934,7 @@ rule-providers:
     format: mrs
     proxy: 自动选择(延迟)
     path: ./rule-providers/google_domain.mrs
-    url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/google.mrs"
+    url: "https://gh.xmly.dev/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/google.mrs"
   apple_firmware_domain:
     type: http
     interval: 86400
@@ -942,7 +942,7 @@ rule-providers:
     format: mrs
     proxy: 自动选择(延迟)
     path: ./rule-providers/apple_firmware_domain.mrs
-    url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/applefirmware.mrs"
+    url: "https://gh.xmly.dev/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/applefirmware.mrs"
   NetEaseMusic_domain:
     type: http
     interval: 86400
@@ -950,7 +950,7 @@ rule-providers:
     format: mrs
     proxy: 自动选择(延迟)
     path: ./rule-providers/netease_music_domain.mrs
-    url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/NetEaseMusic-domain.mrs"
+    url: "https://gh.xmly.dev/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/NetEaseMusic-domain.mrs"
   appleTV_domain:
     type: http
     interval: 86400
@@ -958,7 +958,7 @@ rule-providers:
     format: mrs
     proxy: 自动选择(延迟)
     path: ./rule-providers/appletv_domain.mrs
-    url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/appletv.mrs"
+    url: "https://gh.xmly.dev/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/appletv.mrs"
   UBI_domain:
     type: http
     interval: 86400
@@ -966,7 +966,7 @@ rule-providers:
     format: mrs
     proxy: 自动选择(延迟)
     path: ./rule-providers/ubi_domain.mrs
-    url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/ubi.mrs"
+    url: "https://gh.xmly.dev/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/ubi.mrs"
   talkatone_domain:
     type: http
     interval: 86400
@@ -974,7 +974,7 @@ rule-providers:
     format: mrs
     proxy: 自动选择(延迟)
     path: ./rule-providers/talkatone_domain.mrs
-    url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/Talkatone-domain.mrs"
+    url: "https://gh.xmly.dev/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/Talkatone-domain.mrs"
   wechat_domain:
     type: http
     interval: 86400
@@ -982,7 +982,7 @@ rule-providers:
     format: mrs
     proxy: 自动选择(延迟)
     path: ./rule-providers/wechat_domain.mrs
-    url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/WeChat.mrs"
+    url: "https://gh.xmly.dev/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/WeChat.mrs"
   proxy_domain:
     type: http
     interval: 86400
@@ -990,7 +990,7 @@ rule-providers:
     format: mrs
     proxy: 自动选择(延迟)
     path: ./rule-providers/proxy_domain.mrs
-    url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/proxy.mrs"
+    url: "https://gh.xmly.dev/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/proxy.mrs"
   direct_domain:
     type: http
     interval: 86400
@@ -998,7 +998,7 @@ rule-providers:
     format: mrs
     proxy: 自动选择(延迟)
     path: ./rule-providers/direct_domain.mrs
-    url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/direct.mrs"
+    url: "https://gh.xmly.dev/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/direct.mrs"
   emby_domain:
     type: http
     interval: 86400
@@ -1006,7 +1006,7 @@ rule-providers:
     format: mrs
     proxy: 自动选择(延迟)
     path: ./rule-providers/emby_domain.mrs
-    url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/emby.mrs"
+    url: "https://gh.xmly.dev/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/emby.mrs"
   iptv_domain:
     type: http
     interval: 86400
@@ -1014,7 +1014,7 @@ rule-providers:
     format: mrs
     proxy: 自动选择(延迟)
     path: ./rule-providers/iptv_domain.mrs
-    url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/iptv.mrs"
+    url: "https://gh.xmly.dev/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/iptv.mrs"
   googlevpn_domain:
     type: http
     interval: 86400
@@ -1022,7 +1022,7 @@ rule-providers:
     format: mrs
     proxy: 自动选择(延迟)
     path: ./rule-providers/googlevpn_domain.mrs
-    url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/googleVPN.mrs"
+    url: "https://gh.xmly.dev/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/googleVPN.mrs"
   TVB_domain:
     type: http
     interval: 86400
@@ -1030,7 +1030,7 @@ rule-providers:
     format: mrs
     proxy: 自动选择(延迟)
     path: ./rule-providers/tvb_domain.mrs
-    url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/tvb.mrs"
+    url: "https://gh.xmly.dev/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/Domain/tvb.mrs"
   Test_domain:
     type: http
     interval: 86400
@@ -1038,7 +1038,7 @@ rule-providers:
     format: text
     proxy: 自动选择(延迟)
     path: ./rule-providers/Test_domain.list
-    url: "https://raw.githubusercontent.com/liandu2024/clash/main/list/Check.list"
+    url: "https://gh.xmly.dev/https://raw.githubusercontent.com/liandu2024/clash/main/list/Check.list"
   Block_domain:
     type: http
     interval: 86400
@@ -1046,7 +1046,7 @@ rule-providers:
     format: text
     proxy: 自动选择(延迟)
     path: ./rule-providers/Block_domain.list
-    url: "https://raw.githubusercontent.com/liandu2024/clash/main/list/Block.list"
+    url: "https://gh.xmly.dev/https://raw.githubusercontent.com/liandu2024/clash/main/list/Block.list"
   Gemini_domain:
     type: http
     interval: 86400
@@ -1054,7 +1054,7 @@ rule-providers:
     format: text
     proxy: 自动选择(延迟)
     path: ./rule-providers/Gemini_domain.list
-    url: "https://raw.githubusercontent.com/liandu2024/clash/main/list/Gemini.list"
+    url: "https://gh.xmly.dev/https://raw.githubusercontent.com/liandu2024/clash/main/list/Gemini.list"
   Popcorn_domain:
     type: http
     interval: 86400
@@ -1062,7 +1062,7 @@ rule-providers:
     format: text
     proxy: 自动选择(延迟)
     path: ./rule-providers/Popcorn_domain.list
-    url: "https://raw.githubusercontent.com/liandu2024/clash/main/list/Popcorn.list"
+    url: "https://gh.xmly.dev/https://raw.githubusercontent.com/liandu2024/clash/main/list/Popcorn.list"
   Nvidia_domain:
     type: http
     interval: 86400
@@ -1070,7 +1070,7 @@ rule-providers:
     format: text
     proxy: 自动选择(延迟)
     path: ./rule-providers/Nvidia_domain.list
-    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Nvidia/Nvidia.list"
+    url: "https://gh.xmly.dev/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Nvidia/Nvidia.list"
   Amazon_ip:
     type: http
     interval: 86400
@@ -1078,7 +1078,7 @@ rule-providers:
     format: mrs
     proxy: 自动选择(延迟)
     path: ./rule-providers/Amazon_ip.mrs
-    url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/amazon-ip.mrs"
+    url: "https://gh.xmly.dev/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/amazon-ip.mrs"
   talkatone_ip:
     type: http
     interval: 86400
@@ -1086,7 +1086,7 @@ rule-providers:
     format: mrs
     proxy: 自动选择(延迟)
     path: ./rule-providers/talkatone_ip.mrs
-    url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/Talkatone-ip.mrs"
+    url: "https://gh.xmly.dev/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/Talkatone-ip.mrs"
   steamcdn_ip:
     type: http
     interval: 86400
@@ -1094,7 +1094,7 @@ rule-providers:
     format: mrs
     proxy: 自动选择(延迟)
     path: ./rule-providers/steamcdn_ip.mrs
-    url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/steamCDN-ip.mrs"
+    url: "https://gh.xmly.dev/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/steamCDN-ip.mrs"
   NetEaseMusic_ip:
     type: http
     interval: 86400
@@ -1102,7 +1102,7 @@ rule-providers:
     format: mrs
     proxy: 自动选择(延迟)
     path: ./rule-providers/netease_music_ip.mrs
-    url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/NetEaseMusic-ip.mrs"
+    url: "https://gh.xmly.dev/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/NetEaseMusic-ip.mrs"
   emby_ip:
     type: http
     interval: 86400
@@ -1110,7 +1110,7 @@ rule-providers:
     format: mrs
     proxy: 自动选择(延迟)
     path: ./rule-providers/emby_ip.mrs
-    url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/emby-ip.mrs"
+    url: "https://gh.xmly.dev/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/emby-ip.mrs"
   google_asn_cn:
     type: http
     interval: 86400
@@ -1118,7 +1118,7 @@ rule-providers:
     format: mrs
     proxy: 自动选择(延迟)
     path: ./rule-providers/google_asn_cn.mrs
-    url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/AS24424.mrs"
+    url: "https://gh.xmly.dev/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/AS24424.mrs"
   discord_asn:
     type: http
     interval: 86400
@@ -1126,7 +1126,7 @@ rule-providers:
     format: mrs
     proxy: 自动选择(延迟)
     path: ./rule-providers/discord_asn.mrs
-    url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/AS49544.mrs"
+    url: "https://gh.xmly.dev/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/AS49544.mrs"
   wechat_asn:
     type: http
     interval: 86400
@@ -1134,7 +1134,7 @@ rule-providers:
     format: mrs
     proxy: 自动选择(延迟)
     path: ./rule-providers/wechat_asn.mrs
-    url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/AS132203.mrs"
+    url: "https://gh.xmly.dev/https://raw.githubusercontent.com/Lanlan13-14/Rules/main/rules/IP/AS132203.mrs"
   category-ads-all:
     type: http
     interval: 86400
@@ -1142,4 +1142,4 @@ rule-providers:
     format: mrs
     proxy: 自动选择(延迟)
     path: ./rule-providers/category-ads-all.mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ads-all.mrs"
+    url: "https://gh.xmly.dev/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ads-all.mrs"
