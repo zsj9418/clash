@@ -24,14 +24,14 @@ geodata-loader: standard
 geo-auto-update: true
 geo-update-interval: 48
 geox-url:
-  geosite: "https://un.ax18.ggff.net/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
-  mmdb: "https://un.ax18.ggff.net/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.metadb"
-  geoip: "https://un.ax18.ggff.net/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.dat"
-  asn: "https://un.ax18.ggff.net/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb"
+  geosite: "https://gh.xmly.dev/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
+  mmdb: "https://gh.xmly.dev/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.metadb"
+  geoip: "https://gh.xmly.dev/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.dat"
+  asn: "https://gh.xmly.dev/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb"
 external-controller: 0.0.0.0:9090
 secret: "zs147258"
 external-ui: ./ui
-external-ui-url: "https://un.ax18.ggff.net/https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip"
+external-ui-url: "https://gh.xmly.dev/https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip"
 keep-alive-idle: 600
 keep-alive-interval: 1800
 lgbm-auto-update: false
