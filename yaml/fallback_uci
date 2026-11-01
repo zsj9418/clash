@@ -1,4 +1,3 @@
-
 config openclash 'config'
 	option proxy_mode 'rule'
 	option operation_mode 'fake-ip'
