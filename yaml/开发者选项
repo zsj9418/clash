@@ -1,0 +1,194 @@
+#!/bin/sh
+. /usr/share/openclash/log.sh
+. /lib/functions.sh
+LOG_OUT "Tip: 正在执行主路由系统级补强脚本..."
+(
+MAX_WAIT=90
+WAITED=0
+CLASH_READY=0
+CLASH_API_PORT=$(uci -q get openclash.config.cn_port)
+CLASH_API_PORT=$(echo "$CLASH_API_PORT" | grep -E '^[0-9]+$' || echo "9090")
+while [ $WAITED -lt $MAX_WAIT ]; do
+if curl -s -m 2 -o /dev/null "http://127.0.0.1:${CLASH_API_PORT}/version" 2>/dev/null; then
+CLASH_READY=1
+LOG_OUT "[补强] Clash 核心已就绪 (等待 ${WAITED}s)"
+break
+fi
+sleep 3
+WAITED=$((WAITED + 3))
+done
+[ $CLASH_READY -eq 0 ] && LOG_OUT "[补强] ⚠ 等待 Clash 核心超时，继续执行..." && sleep 5
+CLASH_EN_MODE=$(uci -q get openclash.config.en_mode)
+CLASH_DNS_PORT=$(uci -q get openclash.config.dns_port)
+CLASH_DNS_PORT=$(echo "$CLASH_DNS_PORT" | grep -E '^[0-9]+$' || echo "7874")
+CLASH_ENHANCED_MODE=$(uci -q get openclash.config.enhanced_mode)
+FAKEIP_MODE=0
+case "$CLASH_EN_MODE" in
+fake-ip|fake-ip-tun|fake-ip-mix|fake-ip-vpn) FAKEIP_MODE=1 ;;
+esac
+[ "$CLASH_ENHANCED_MODE" = "fake-ip" ] && FAKEIP_MODE=1
+LOG_OUT "[补强] OpenClash 模式: ${CLASH_EN_MODE} | DNS端口: ${CLASH_DNS_PORT} | Fake-IP: ${FAKEIP_MODE}"
+LOG_OUT "[补强] 1/5 调优内核网络参数..."
+if [ -f /proc/sys/net/ipv4/tcp_available_congestion_control ] && grep -q "bbr" /proc/sys/net/ipv4/tcp_available_congestion_control 2>/dev/null; then
+modprobe sch_fq 2>/dev/null
+echo "bbr" > /proc/sys/net/ipv4/tcp_congestion_control 2>/dev/null
+echo "fq" > /proc/sys/net/core/default_qdisc 2>/dev/null
+LOG_OUT "[补强] - BBR 拥塞控制已启用"
+else
+LOG_OUT "[补强] - 内核不支持 BBR，跳过"
+fi
+echo 3 > /proc/sys/net/ipv4/tcp_fastopen 2>/dev/null
+echo 16777216 > /proc/sys/net/core/rmem_max 2>/dev/null
+echo 16777216 > /proc/sys/net/core/wmem_max 2>/dev/null
+echo "4096 87380 16777216" > /proc/sys/net/ipv4/tcp_rmem 2>/dev/null
+echo "4096 65536 16777216" > /proc/sys/net/ipv4/tcp_wmem 2>/dev/null
+echo 4096 > /proc/sys/net/core/netdev_max_backlog 2>/dev/null
+echo 4096 > /proc/sys/net/core/somaxconn 2>/dev/null
+echo 1 > /proc/sys/net/ipv4/tcp_tw_reuse 2>/dev/null
+echo 1 > /proc/sys/net/ipv4/tcp_syncookies 2>/dev/null
+echo 0 > /proc/sys/net/ipv4/conf/all/accept_redirects 2>/dev/null
+echo 0 > /proc/sys/net/ipv4/conf/all/send_redirects 2>/dev/null
+echo 0 > /proc/sys/net/ipv6/conf/all/accept_redirects 2>/dev/null
+MEM_MB=$(awk '/MemTotal/{print int($2/1024)}' /proc/meminfo)
+if [ "$MEM_MB" -ge 2048 ]; then CONNTRACK_MAX=524288
+elif [ "$MEM_MB" -ge 1024 ]; then CONNTRACK_MAX=262144
+elif [ "$MEM_MB" -ge 512 ]; then CONNTRACK_MAX=131072
+else CONNTRACK_MAX=65536
+fi
+echo $CONNTRACK_MAX > /proc/sys/net/netfilter/nf_conntrack_max 2>/dev/null
+HASH_SIZE=$((CONNTRACK_MAX / 4))
+echo $HASH_SIZE > /sys/module/nf_conntrack/parameters/hashsize 2>/dev/null
+echo 60 > /proc/sys/net/netfilter/nf_conntrack_tcp_timeout_close_wait 2>/dev/null
+echo 30 > /proc/sys/net/netfilter/nf_conntrack_tcp_timeout_fin_wait 2>/dev/null
+echo 30 > /proc/sys/net/netfilter/nf_conntrack_tcp_timeout_last_ack 2>/dev/null
+echo 120 > /proc/sys/net/netfilter/nf_conntrack_tcp_timeout_time_wait 2>/dev/null
+LOG_OUT "[补强] - 内存 ${MEM_MB}MB, conntrack_max=${CONNTRACK_MAX}, hashsize=${HASH_SIZE}"
+LOG_OUT "[补强] 1/5 内核参数调优完成"
+LOG_OUT "[补强] 2/5 处理 /etc/resolv.conf 与 Dnsmasq 上游..."
+if [ "$FAKEIP_MODE" = "1" ]; then
+LOG_OUT "[补强] - Fake-IP 模式，OpenClash 已接管 DNS 流量，跳过 resolv.conf 修改"
+else
+if [ $CLASH_READY -eq 0 ]; then
+LOG_OUT "[补强] - ⚠ Clash 未就绪，跳过 dnsmasq 上游配置以防 DNS 断链"
+else
+uci -q set dhcp.@dnsmasq[0].noresolv='1'
+uci -q delete dhcp.@dnsmasq[0].resolvfile
+uci -q set dhcp.@dnsmasq[0].localuse='1'
+uci -q set dhcp.@dnsmasq[0].cachesize='150'
+uci -q delete dhcp.@dnsmasq[0].server
+uci -q add_list dhcp.@dnsmasq[0].server="127.0.0.1#${CLASH_DNS_PORT}"
+echo "nameserver 127.0.0.1" > /tmp/resolv.conf.openclash
+ln -sf /tmp/resolv.conf.openclash /etc/resolv.conf 2>/dev/null || true
+if grep -q "127.0.0.1" /etc/resolv.conf 2>/dev/null; then
+LOG_OUT "[补强] - resolv.conf 已修复, dnsmasq 上游: 127.0.0.1#${CLASH_DNS_PORT}"
+else
+LOG_OUT "[补强] - ⚠ resolv.conf 修复失败，请手动检查"
+fi
+fi
+fi
+LOG_OUT "[补强] 2/5 DNS 链路配置完成"
+LOG_OUT "[补强] 3/5 封堵 IPv6 RA/DHCPv6 DNS 泄漏..."
+LAN_IP6=$(ip -6 addr show dev br-lan scope global 2>/dev/null | awk '/inet6/ && !/temporary|deprecated/ {print $2}' | cut -d/ -f1 | head -n1)
+if [ -n "$LAN_IP6" ]; then
+uci -q set dhcp.lan.dns="$LAN_IP6"
+LOG_OUT "[补强] - DHCPv6 通告 DNS 已指向路由器: ${LAN_IP6}"
+else
+uci -q delete dhcp.lan.dns 2>/dev/null
+LOG_OUT "[补强] - 未检测到全局 IPv6，已清除 DHCPv6 DNS 通告"
+fi
+uci -q set dhcp.lan.ra_dns='0'
+uci -q set dhcp.lan.ra_uselease='0'
+uci -q commit dhcp
+LOG_OUT "[补强] 3/5 IPv6 DNS 泄漏封堵完成"
+LOG_OUT "[补强] 4/5 处理 Dnsmasq 广告拦截兜底规则..."
+if [ "$FAKEIP_MODE" = "1" ]; then
+LOG_OUT "[补强] - Fake-IP 模式下跳过 anti-ad 规则下载，建议使用 Clash rule-providers"
+else
+DNSMASQ_CONF_DIR="/tmp/dnsmasq.d"
+mkdir -p "$DNSMASQ_CONF_DIR"
+AD_FILE="${DNSMASQ_CONF_DIR}/anti-ad-for-dnsmasq.conf"
+AD_URL="https://anti-ad.net/anti-ad-for-dnsmasq.conf"
+AD_URL_BACKUP="https://raw.githubusercontent.com/privacy-protection-tools/anti-AD/master/anti-ad-for-dnsmasq.conf"
+DOWNLOAD_OK=0
+if curl -m 45 -sfL -o "${AD_FILE}.tmp" "$AD_URL" 2>/dev/null; then
+DOWNLOAD_OK=1
+elif curl -m 45 -sfL -o "${AD_FILE}.tmp" "$AD_URL_BACKUP" 2>/dev/null; then
+DOWNLOAD_OK=1
+fi
+if [ $DOWNLOAD_OK -eq 1 ] && [ -s "${AD_FILE}.tmp" ] && grep -q "^address=" "${AD_FILE}.tmp" 2>/dev/null; then
+mv -f "${AD_FILE}.tmp" "$AD_FILE"
+AD_COUNT=$(grep -c "^address=" "$AD_FILE" 2>/dev/null)
+LOG_OUT "[补强] - 广告规则更新成功，共 ${AD_COUNT} 条"
+elif [ -f "$AD_FILE" ] && [ -s "$AD_FILE" ]; then
+rm -f "${AD_FILE}.tmp"
+LOG_OUT "[补强] - ⚠ 下载失败，使用本地缓存规则"
+else
+rm -f "${AD_FILE}.tmp"
+LOG_OUT "[补强] - ⚠ 广告规则下载失败且无缓存，跳过更新"
+fi
+fi
+LOG_OUT "[补强] 4/5 广告拦截处理完成"
+LOG_OUT "[补强] 重载 dnsmasq / odhcpd 服务..."
+/etc/init.d/dnsmasq reload >/dev/null 2>&1
+/etc/init.d/odhcpd reload >/dev/null 2>&1
+LOG_OUT "[补强] 5/5 配置 PPPoE MSS 钳制..."
+PPPOE_IF=""
+for iface in $(ls /sys/class/net/ 2>/dev/null); do
+case "$iface" in
+pppoe-*|ppp*)
+if [ -d "/sys/class/net/$iface" ] && [ "$(cat /sys/class/net/$iface/operstate 2>/dev/null)" = "up" ]; then
+PPPOE_IF="$iface"
+break
+fi
+;;
+esac
+done
+if [ -z "$PPPOE_IF" ]; then
+LOG_OUT "[补强] - 未检测到活动 PPPoE 接口，跳过 MSS 钳制"
+else
+PPP_MTU=$(cat /sys/class/net/${PPPOE_IF}/mtu 2>/dev/null)
+PPP_MTU=${PPP_MTU:-1492}
+CLAMP_MSS4=$((PPP_MTU - 40))
+CLAMP_MSS6=$((PPP_MTU - 60))
+LOG_OUT "[补强] - PPPoE 接口: ${PPPOE_IF}, MTU=${PPP_MTU}, MSS4=${CLAMP_MSS4}, MSS6=${CLAMP_MSS6}"
+if command -v nft >/dev/null 2>&1 && nft list tables 2>/dev/null | grep -q "inet fw4"; then
+if ! nft -a list chain inet fw4 forward 2>/dev/null | grep -q 'comment "openclash-mss-v4-out"'; then
+nft insert rule inet fw4 forward oifname "$PPPOE_IF" tcp flags syn tcp option maxseg size set $CLAMP_MSS4 comment '"openclash-mss-v4-out"' 2>/dev/null
+nft insert rule inet fw4 forward iifname "$PPPOE_IF" tcp flags syn tcp option maxseg size set $CLAMP_MSS4 comment '"openclash-mss-v4-in"' 2>/dev/null
+LOG_OUT "[补强] - [nftables] IPv4 MSS 钳制规则已添加"
+else
+LOG_OUT "[补强] - [nftables] IPv4 MSS 钳制规则已存在，跳过"
+fi
+if ! nft -a list chain inet fw4 forward 2>/dev/null | grep -q 'comment "openclash-mss-v6-out"'; then
+nft insert rule inet fw4 forward oifname "$PPPOE_IF" meta nfproto ipv6 tcp flags syn tcp option maxseg size set $CLAMP_MSS6 comment '"openclash-mss-v6-out"' 2>/dev/null
+nft insert rule inet fw4 forward iifname "$PPPOE_IF" meta nfproto ipv6 tcp flags syn tcp option maxseg size set $CLAMP_MSS6 comment '"openclash-mss-v6-in"' 2>/dev/null
+LOG_OUT "[补强] - [nftables] IPv6 MSS 钳制规则已添加"
+else
+LOG_OUT "[补强] - [nftables] IPv6 MSS 钳制规则已存在，跳过"
+fi
+elif command -v iptables >/dev/null 2>&1; then
+if ! iptables -t mangle -C FORWARD -o "$PPPOE_IF" -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --set-mss $CLAMP_MSS4 2>/dev/null; then
+iptables -t mangle -I FORWARD -o "$PPPOE_IF" -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --set-mss $CLAMP_MSS4
+iptables -t mangle -I FORWARD -i "$PPPOE_IF" -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --set-mss $CLAMP_MSS4
+LOG_OUT "[补强] - [iptables] IPv4 MSS 钳制已添加"
+else
+LOG_OUT "[补强] - [iptables] IPv4 MSS 钳制已存在，跳过"
+fi
+if command -v ip6tables >/dev/null 2>&1; then
+if ! ip6tables -t mangle -C FORWARD -o "$PPPOE_IF" -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --set-mss $CLAMP_MSS6 2>/dev/null; then
+ip6tables -t mangle -I FORWARD -o "$PPPOE_IF" -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --set-mss $CLAMP_MSS6
+ip6tables -t mangle -I FORWARD -i "$PPPOE_IF" -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --set-mss $CLAMP_MSS6
+LOG_OUT "[补强] - [ip6tables] IPv6 MSS 钳制已添加"
+else
+LOG_OUT "[补强] - [ip6tables] IPv6 MSS 钳制已存在，跳过"
+fi
+fi
+else
+LOG_OUT "[补强] - ⚠ 未找到 nft 或 iptables 命令"
+fi
+fi
+LOG_OUT "[补强] 5/5 MSS 钳制配置完成"
+LOG_OUT "[补强] ✅ 全部系统级补强执行完毕"
+LOG_OUT "[补强] 摘要: BBR+TCP优化 | conntrack(${CONNTRACK_MAX}) | DNS链路(${CLASH_EN_MODE}) | IPv6 RA封堵 | MSS钳制"
+) &
+exit 0
